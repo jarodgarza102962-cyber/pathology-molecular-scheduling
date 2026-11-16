@@ -1103,8 +1103,9 @@
         #postsConfigTable tbody tr:hover {
             background: #eef6fe;
         }
-        #postsConfigTable tbody tr.post-row-selected {
-            background: #f0f7ff;
+        #postsConfigTable tbody tr.post-row-selected,
+        #postsConfigTable tbody tr.post-row-selected td {
+            background: #e6f7ff !important;
         }
         #postsConfigTable tbody tr.post-row-editing {
             background: #fffdf2;
@@ -1406,6 +1407,73 @@
             background: transparent;
             color: #f56c6c;
             cursor: pointer;
+        }
+
+        /* 树结构展开/折叠三角箭头与半选/全选复选框样式 (100% 对齐用户截图规范) */
+        .tree-node-arrow {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 14px;
+            height: 14px;
+            font-size: 10px;
+            color: #909399;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.15s ease;
+            flex-shrink: 0;
+            margin-right: 4px;
+        }
+        .tree-node-arrow.expanded {
+            transform: rotate(0deg);
+        }
+        .tree-node-arrow.collapsed {
+            transform: rotate(-90deg);
+        }
+        .tree-custom-checkbox {
+            width: 14px;
+            height: 14px;
+            border-radius: 2px;
+            border: 1px solid #dcdfe6;
+            background: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-right: 6px;
+            box-sizing: border-box;
+            flex-shrink: 0;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+        .tree-custom-checkbox:hover {
+            border-color: #008fd5;
+        }
+        .tree-custom-checkbox.checked {
+            background: #008fd5;
+            border-color: #008fd5;
+            color: #ffffff;
+        }
+        .tree-custom-checkbox.checked::after {
+            content: '';
+            width: 3.5px;
+            height: 7px;
+            border: solid #ffffff;
+            border-width: 0 1.8px 1.8px 0;
+            transform: rotate(45deg);
+            margin-bottom: 2px;
+        }
+        /* 半选状态：参考截图里的 [-] 蓝色方块带白色横杠 */
+        .tree-custom-checkbox.indeterminate {
+            background: #008fd5;
+            border-color: #008fd5;
+        }
+        .tree-custom-checkbox.indeterminate::after {
+            content: '';
+            width: 7px;
+            height: 2px;
+            background: #ffffff;
+            border-radius: 1px;
         }
         .selector-modal-footer {
             height: 48px;
@@ -4877,6 +4945,14 @@
 .exact-detail-table tbody tr:hover td {
     background: #F0F7FF !important;
 }
+.exact-detail-table tbody tr.selected-row,
+.exact-detail-table tbody tr.selected-row td,
+.batch-table-row.selected-row,
+.batch-table-row.selected-row td,
+tr.row-selected,
+tr.row-selected td {
+    background: #e6f7ff !important;
+}
 
 /* 规范 6：状态标签使用浅色底和细边框，不用高饱和实心大块 */
 .status-tag-standard {
@@ -7869,7 +7945,7 @@
                 <!-- ================= 一、 顶部控制栏（快捷操作区） ================= -->
                 <!-- ================= 顶部操作区 (两翼架构 · 全屏撑满) ================= -->
                 <div class="card-control-bar">
-                    <!-- 左侧：功能操作按钮区（按使用频率排序：排班修改 -> 单日排班 -> 批量排班 -> 导出 Excel -> 排班规则维护；纯文字无图标规范） -->
+                    <!-- 左侧：功能操作按钮区（按使用频率排序：发起待办 -> 批量排班 -> 单日排班 -> 排班规则维护；纯文字无图标规范） -->
                     <div class="actions-left" style="display: flex; align-items: center; gap: 8px;">
                         <!-- 0. 发起待办 (主蓝实心按钮) -->
                         <button type="button" class="btn btn-blue" id="btnLaunchTodo" style="height: 28px; font-size: 12px; background: #008fd5; color: #ffffff; border: 1px solid #008fd5; border-radius: 3px; padding: 0 16px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; justify-content: center;" onclick="openLaunchTodoModal()">发起待办</button>
@@ -7882,9 +7958,6 @@
 
                         <!-- 3. 排班规则维护 (白底灰线框) -->
                         <button type="button" class="btn btn-default" style="height: 28px; font-size: 12px; color: #303133; border: 1px solid #dcdfe6; background: #ffffff; border-radius: 3px; padding: 0 12px; cursor: pointer;" onclick="openConfigModal()">排班规则维护</button>
-
-                        <!-- 4. 导出 Excel (补齐截图中的白底灰线框按钮) -->
-                        <button type="button" class="btn btn-default" id="btnExportExcel" style="height: 28px; font-size: 12px; color: #303133; border: 1px solid #dcdfe6; background: #ffffff; border-radius: 3px; padding: 0 12px; cursor: pointer;" onclick="exportExcel()">导出 Excel</button>
                     </div><!-- 右侧：筛选条件区（时间区间 + 快捷周期 + 专业组 + 人员） -->
                     <div class="filters-right" style="display: flex; align-items: center; gap: 10px;">
                         
@@ -7912,6 +7985,12 @@
                                 <div class="month-panel-divider"></div>
                                 <div class="month-grid" id="monthGrid"></div>
                             </div>
+                        </div>
+
+                        <!-- 顶部排班状态展示徽章 (每一次时间筛选对应展示排班表的状态) -->
+                        <div id="topScheduleStatusBadge" style="display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 12px; background: #f0f9eb; border: 1px solid #b3e19d; font-size: 12px; font-weight: 500; color: #67c23a; white-space: nowrap; height: 26px; box-sizing: border-box;" title="当前排班状态">
+                            <span id="topScheduleStatusDot" style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #67c23a;"></span>
+                            <span id="topScheduleStatusText">已发布</span>
                         </div>
 
                         <!-- 岗位大类筛选 (包含分子检测技术等7大类) -->
@@ -8017,14 +8096,10 @@
                         </div>
                     </div>
 
-                    <!-- 底部状态条 -->
-                    <div class="matrix-footer-bar">
-                        <div id="footerViewMode" style="display:flex;align-items:center;">
-                            <span>当前周期 <strong id="footerPeriodText">2026年 11月 全月排班（01日 至 30日）</strong></span>
-                            <span class="status-divider">·</span>
-                            <span>排班状态 <strong style="color:#10b981;">已发布</strong></span>
-                            <span class="status-divider">·</span>
-                            <span>最后更新时间 2026-10-25 16:30</span>
+                    <!-- 底部状态条 (已按需求移除底部周期排班状态与更新时间展示，统一收敛至顶部展示) -->
+                    <div class="matrix-footer-bar" style="display: flex; justify-content: flex-end; align-items: center; padding: 0 16px;">
+                        <div id="footerViewMode" style="display:none;">
+                            <span id="footerPeriodText" style="display:none;"></span>
                         </div>
                         <div id="footerEditMode" style="display:none;align-items:center;"></div>
                         <div>
@@ -8161,10 +8236,9 @@
     <!-- ================= CNAS 标准排班规则维护中心 (项目与任务拆分成两列 · 100% 对齐用户表格与截图样式) ================= -->
     <div class="modal-overlay" id="ruleConfigPageOverlay" onclick="closeConfigModal(event)" style="display:none;z-index:2100;">
         <div class="modal-container" onclick="event.stopPropagation()" style="width: 1760px; max-width: 98vw; height: 94vh; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; background:#ffffff; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
-            <!-- 1. 弹窗头部 -->
+            <!-- 1. 弹窗头部 (按要求去除蓝色竖线，纯文字展示) -->
             <div style="height:46px; border-bottom:1px solid #e4e7ed; display:flex; align-items:center; justify-content:center; padding:0 20px; position:relative; background:#ffffff; flex-shrink:0;">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <span style="display:inline-block; width:3px; height:16px; background:#008fd5; border-radius:2px;"></span>
+                <div style="display:flex; align-items:center;">
                     <strong style="font-size:15px; color:#303133; letter-spacing:0.3px; font-weight:600;">岗位与排班规则</strong>
                 </div>
                 <div class="modal-close-cube" onclick="closeConfigModal()" title="关闭" style="position:absolute; right:0; top:0; width:46px; height:46px; background:#008fd5; color:#ffffff; display:flex; align-items:center; justify-content:center; font-size:22px; cursor:pointer; user-select:none;">×</div>
@@ -8226,10 +8300,10 @@
                 </main>
             </div>
 
-            <!-- 3. 弹窗底部操作栏 -->
+            <!-- 3. 弹窗底部操作栏 (依次为：确定，取消) -->
             <div style="height:52px; border-top:1px solid #e4e7ed; background:#ffffff; padding:0 20px; display:flex; align-items:center; justify-content:flex-end; gap:10px; flex-shrink:0;">
-                <button type="button" class="btn btn-blue" onclick="saveAllConfigs()" style="height:32px; background:#008fd5; color:#fff; border:0; border-radius:3px; padding:0 22px; cursor:pointer; font-size:13px; font-weight:500;">保存配置</button>
-                <button type="button" class="btn btn-default" onclick="closeConfigModal()" style="height:32px; padding:0 16px; background:#fff; border:1px solid #dcdfe6; border-radius:3px; color:#606266; cursor:pointer; font-size:13px;">取消修改</button>
+                <button type="button" class="btn btn-blue" onclick="saveAllConfigs()" style="height:32px; background:#008fd5; color:#fff; border:0; border-radius:3px; padding:0 22px; cursor:pointer; font-size:13px; font-weight:500;">确定</button>
+                <button type="button" class="btn btn-default" onclick="closeConfigModal()" style="height:32px; padding:0 18px; background:#fff; border:1px solid #dcdfe6; border-radius:3px; color:#606266; cursor:pointer; font-size:13px;">取消</button>
             </div>
         </div>
     </div>
@@ -8245,68 +8319,63 @@
                 <input type="hidden" id="ruleGroupEditId" value="">
                 <label style="display:flex; align-items:center; gap:12px;">
                     <span style="width:80px; text-align:right; color:#303133;"><span style="color:#f56c6c;">*</span> 大类名称</span>
-                    <input id="ruleGroupNameInput" style="flex:1; height:32px; border:1px solid #dcdfe6; border-radius:3px; padding:0 10px; font-size:13px;" placeholder="请输入大类名称">
+                    <input id="ruleGroupNameInput" style="flex:1; height:32px; border:1px solid #dcdfe6; border-radius:3px; padding:0 10px; font-size:13px;" placeholder="">
                 </label>
                 <div style="display:flex; align-items:center; gap:12px;">
                     <span style="width:80px; text-align:right; color:#303133;"><span style="color:#f56c6c;">*</span> 兼任属性</span>
-                    <div style="flex:1; display:flex; align-items:center; gap:18px;">
-                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:13px; color:#303133;">
-                            <input type="radio" name="ruleGroupEnabledRadio" id="radioEnabledTrue" value="true" checked>
-                            <span style="color:#67c23a; font-weight:600;">开启兼任</span>
+                    <div style="flex:1; display:flex; align-items:center; gap:18px;" id="ruleGroupRadioContainer">
+                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:13px;" onclick="syncRuleGroupRadioVisual()">
+                            <input type="radio" name="ruleGroupEnabledRadio" id="radioEnabledTrue" value="true" checked style="accent-color:#008fd5; cursor:pointer;" onchange="syncRuleGroupRadioVisual()">
+                            <span id="labelRadioEnabledTrue" style="color:#008fd5; font-weight:600;">开启兼任</span>
                         </label>
-                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:13px; color:#303133;">
-                            <input type="radio" name="ruleGroupEnabledRadio" id="radioEnabledFalse" value="false">
-                            <span style="color:#008fd5; font-weight:600;">关闭兼任</span>
+                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:13px;" onclick="syncRuleGroupRadioVisual()">
+                            <input type="radio" name="ruleGroupEnabledRadio" id="radioEnabledFalse" value="false" style="accent-color:#008fd5; cursor:pointer;" onchange="syncRuleGroupRadioVisual()">
+                            <span id="labelRadioEnabledFalse" style="color:#303133;">关闭兼任</span>
                         </label>
                     </div>
                 </div>
             </div>
+            <!-- 底部按钮依次是：确定，取消 -->
             <div class="selector-modal-footer" style="height:46px; border-top:1px solid #ebeef5; padding:0 18px; display:flex; align-items:center; justify-content:flex-end; gap:10px; background:#fafbfc;">
-                <button type="button" class="btn btn-default" onclick="closeRuleGroupModal()" style="height:28px; padding:0 14px; border:1px solid #dcdfe6; background:#fff; border-radius:3px; cursor:pointer;">取消</button>
-                <button type="button" class="btn btn-blue" style="background:#008fd5; color:#fff; border:0; border-radius:3px; height:28px; padding:0 18px; cursor:pointer; font-weight:500;" onclick="saveRuleGroupModal()">确定保存</button>
+                <button type="button" class="btn btn-blue" style="background:#008fd5; color:#fff; border:0; border-radius:3px; height:28px; padding:0 20px; cursor:pointer; font-weight:500;" onclick="saveRuleGroupModal()">确定</button>
+                <button type="button" class="btn btn-default" onclick="closeRuleGroupModal()" style="height:28px; padding:0 16px; border:1px solid #dcdfe6; background:#fff; border-radius:3px; color:#606266; cursor:pointer;">取消</button>
             </div>
+        </div>
+    </div>
         </div>
     </div>
 
         <!-- ================= 弹窗：检测项目选择弹窗 (ruleProjectPickerModal) ================= -->
     <div class="modal-overlay" id="ruleProjectPickerModal" onclick="closeRuleProjectPicker(event)" style="display:none;z-index:2300;">
-        <div class="selector-modal-card" onclick="event.stopPropagation()" style="width:680px; max-width:94vw; border-radius:4px; box-shadow:0 6px 24px rgba(0,0,0,0.2); overflow:hidden;">
+        <div class="selector-modal-card" onclick="event.stopPropagation()" style="width:720px; max-width:94vw; border-radius:4px; box-shadow:0 6px 24px rgba(0,0,0,0.2); overflow:hidden;">
             <!-- 标题居中，右侧关闭按钮绝对定位 -->
             <div class="selector-modal-header" style="height:46px; position:relative; display:flex; align-items:center; justify-content:center; padding:0 18px; border-bottom:1px solid #ebeef5; background:#fafbfc;">
                 <strong style="font-size:15px; font-weight:600; color:#303133; text-align:center;">关联检测项目选择</strong>
                 <button type="button" class="selector-modal-close" onclick="closeRuleProjectPicker()" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); border:0; background:transparent; font-size:20px; color:#909399; cursor:pointer; line-height:1;">×</button>
             </div>
             
-            <!-- 左右双栏：左侧【检测项目】，右侧【已选】 -->
-            <div class="selector-modal-body" style="height:320px; display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:14px 18px 10px 18px;">
-                <!-- 左侧可选区域 -->
+            <!-- 左右双栏：左侧【检测方法与项目(二级树)】，右侧【已选】 -->
+            <div class="selector-modal-body" style="height:360px; display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:14px 18px 10px 18px;">
+                <!-- 左侧可选区域：按检测方法分类的二级树结构，叶子节点为项目 -->
                 <div class="selector-pane" style="border:1px solid #ebeef5; border-radius:4px; display:flex; flex-direction:column; overflow:hidden;">
-                    <div class="selector-pane-title" style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #ebeef5; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600;">
+                    <div class="selector-pane-title" style="padding:6px 12px; background:#f8fafc; border-bottom:1px solid #ebeef5; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600;">
                         <span style="color:#303133;">检测项目</span>
-                        <span id="ruleProjectPickerCount" style="color:#008fd5; font-weight:normal;">已选 0 项</span>
+                        <input class="selector-search" id="ruleProjectPickerSearch" placeholder="请输入项目名称" oninput="renderRuleProjectPicker(this.value)" style="width:150px; height:26px; border:1px solid #dcdfe6; border-radius:4px; padding:0 8px; font-size:12px; box-sizing:border-box; outline:none; background:#ffffff;">
                     </div>
-                    <div style="padding:6px 10px; border-bottom:1px solid #f0f2f5;">
-                        <input class="selector-search" id="ruleProjectPickerSearch" placeholder="搜索项目名称..." oninput="renderRuleProjectPicker(this.value)" style="width:100%; height:28px; border:1px solid #dcdfe6; border-radius:3px; padding:0 8px; font-size:12px; box-sizing:border-box;">
-                    </div>
-                    <div class="task-tree-scroll" id="ruleProjectPickerOptions" style="flex:1; overflow-y:auto; padding:8px 12px;"></div>
+                    <div class="task-tree-scroll" id="ruleProjectPickerOptions" style="flex:1; overflow-y:auto; padding:6px 10px;"></div>
                 </div>
 
                 <!-- 右侧已选区域 -->
                 <div class="selector-pane" style="border:1px solid #ebeef5; border-radius:4px; display:flex; flex-direction:column; overflow:hidden;">
                     <div class="selector-pane-title" style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #ebeef5; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600;">
-                        <span style="color:#303133;">已选</span>
-                        <button type="button" style="font-size:12px; color:#f56c6c; border:0; background:transparent; cursor:pointer;" onclick="clearRuleProjectPicker()">清空全部</button>
+                        <span style="color:#303133;">已选项目:</span>
+                        <button type="button" onclick="clearRuleProjectPicker()" style="border:0; background:transparent; color:#f56c6c; cursor:pointer; font-size:12px; padding:0;">清空</button>
                     </div>
                     <div class="selected-task-scroll" id="ruleProjectPickerSelected" style="flex:1; overflow-y:auto; padding:8px 12px;"></div>
                 </div>
             </div>
 
-            <!-- 下方新增区域：自定义新增，文本框与右侧添加按钮同行对齐 -->
-            <div style="padding:10px 18px; border-top:1px solid #ebeef5; background:#fafbfc; display:flex; align-items:center; gap:8px;">
-                <span style="font-size:12px; color:#606266; white-space:nowrap; font-weight:500;">自定义新增</span>
-                <input id="ruleCustomProjectInput" style="flex:1; height:30px; border:1px solid #dcdfe6; border-radius:3px; padding:0 10px; font-size:12px; outline:none; box-sizing:border-box;" placeholder="输入自定义项目名称" onkeydown="if(event.key==='Enter') addCustomRuleProject()">
-                <button type="button" class="btn btn-default" style="height:30px; padding:0 16px; font-size:12px; border:1px solid #008fd5; color:#008fd5; background:#fff; border-radius:3px; cursor:pointer; font-weight:500; white-space:nowrap;" onclick="addCustomRuleProject()">+ 添加</button>
-            </div>
+            <!-- 下方的自定义新增功能已按需求完全去掉 -->
 
             <!-- 弹窗下方的操作区：取消、确定 -->
             <div class="selector-modal-footer" style="height:48px; border-top:1px solid #ebeef5; padding:0 18px; display:flex; align-items:center; justify-content:flex-end; gap:10px; background:#ffffff;">
@@ -8318,7 +8387,7 @@
 
     <!-- ================= 弹窗：任务明细选择弹窗 (ruleTaskPickerModal) ================= -->
     <div class="modal-overlay" id="ruleTaskPickerModal" onclick="closeRuleTaskPicker(event)" style="display:none;z-index:2300;">
-        <div class="selector-modal-card" onclick="event.stopPropagation()" style="width:680px; max-width:94vw; border-radius:4px; box-shadow:0 6px 24px rgba(0,0,0,0.2); overflow:hidden;">
+        <div class="selector-modal-card" onclick="event.stopPropagation()" style="width:700px; max-width:94vw; border-radius:4px; box-shadow:0 6px 24px rgba(0,0,0,0.2); overflow:hidden;">
             <!-- 标题居中，右侧关闭按钮绝对定位 -->
             <div class="selector-modal-header" style="height:46px; position:relative; display:flex; align-items:center; justify-content:center; padding:0 18px; border-bottom:1px solid #ebeef5; background:#fafbfc;">
                 <strong style="font-size:15px; font-weight:600; color:#303133; text-align:center;">岗位任务明细选择</strong>
@@ -8329,31 +8398,38 @@
             <div class="selector-modal-body" style="height:320px; display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:14px 18px 10px 18px;">
                 <!-- 左侧可选区域 -->
                 <div class="selector-pane" style="border:1px solid #ebeef5; border-radius:4px; display:flex; flex-direction:column; overflow:hidden;">
-                    <div class="selector-pane-title" style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #ebeef5; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600;">
+                    <div class="selector-pane-title" style="padding:6px 12px; background:#f8fafc; border-bottom:1px solid #ebeef5; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600;">
                         <span style="color:#303133;">任务列表</span>
-                        <span id="ruleTaskPickerCount" style="color:#67c23a; font-weight:normal;">已选 0 项</span>
+                        <input class="selector-search" id="ruleTaskPickerSearch" placeholder="请输入任务名称" oninput="renderRuleTaskPicker(this.value)" style="width:150px; height:26px; border:1px solid #dcdfe6; border-radius:4px; padding:0 8px; font-size:12px; box-sizing:border-box; outline:none; background:#ffffff;">
                     </div>
-                    <div style="padding:6px 10px; border-bottom:1px solid #f0f2f5;">
-                        <input class="selector-search" id="ruleTaskPickerSearch" placeholder="搜索任务名称..." oninput="renderRuleTaskPicker(this.value)" style="width:100%; height:28px; border:1px solid #dcdfe6; border-radius:3px; padding:0 8px; font-size:12px; box-sizing:border-box;">
+                    <!-- 两列表头：第一列任务名称，第二列任务周期 -->
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:5px 12px; background:#f4f6f8; border-bottom:1px solid #ebeef5; font-size:12px; font-weight:600; color:#606266;">
+                        <span>任务名称</span>
+                        <span style="width:70px; text-align:center;">任务周期</span>
                     </div>
-                    <div class="task-tree-scroll" id="ruleTaskPickerOptions" style="flex:1; overflow-y:auto; padding:8px 12px;"></div>
+                    <div class="task-tree-scroll" id="ruleTaskPickerOptions" style="flex:1; overflow-y:auto; padding:6px 10px;"></div>
                 </div>
 
                 <!-- 右侧已选区域 -->
                 <div class="selector-pane" style="border:1px solid #ebeef5; border-radius:4px; display:flex; flex-direction:column; overflow:hidden;">
                     <div class="selector-pane-title" style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #ebeef5; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600;">
-                        <span style="color:#303133;">已选</span>
-                        <button type="button" style="font-size:12px; color:#f56c6c; border:0; background:transparent; cursor:pointer;" onclick="clearRuleTaskPicker()">清空全部</button>
+                        <span style="color:#303133;">已选任务:</span>
+                        <button type="button" onclick="clearRuleTaskPicker()" style="border:0; background:transparent; color:#f56c6c; cursor:pointer; font-size:12px; padding:0;">清空</button>
                     </div>
                     <div class="selected-task-scroll" id="ruleTaskPickerSelected" style="flex:1; overflow-y:auto; padding:8px 12px;"></div>
                 </div>
             </div>
 
-            <!-- 下方新增区域：自定义新增，文本框与右侧添加按钮同行对齐 -->
+            <!-- 下方新增区域：自定义新增，加任务周期下拉组件 -->
             <div style="padding:10px 18px; border-top:1px solid #ebeef5; background:#fafbfc; display:flex; align-items:center; gap:8px;">
                 <span style="font-size:12px; color:#606266; white-space:nowrap; font-weight:500;">自定义新增</span>
                 <input id="ruleCustomTaskInput" style="flex:1; height:30px; border:1px solid #dcdfe6; border-radius:3px; padding:0 10px; font-size:12px; outline:none; box-sizing:border-box;" placeholder="输入自定义任务名称" onkeydown="if(event.key==='Enter') addCustomRuleTask()">
-                <button type="button" class="btn btn-default" style="height:30px; padding:0 16px; font-size:12px; border:1px solid #008fd5; color:#008fd5; background:#fff; border-radius:3px; cursor:pointer; font-weight:500; white-space:nowrap;" onclick="addCustomRuleTask()">+ 添加</button>
+                <select id="ruleCustomTaskPeriodSelect" style="width:85px; height:30px; border:1px solid #dcdfe6; border-radius:3px; padding:0 6px; font-size:12px; outline:none; color:#303133; background:#ffffff; cursor:pointer;" title="选择任务周期">
+                    <option value="每日">每日</option>
+                    <option value="每周" selected>每周</option>
+                    <option value="每月">每月</option>
+                </select>
+                <button type="button" class="btn btn-default" style="height:30px; padding:0 16px; font-size:12px; border:1px solid #008fd5; color:#008fd5; background:#fff; border-radius:3px; cursor:pointer; font-weight:500; white-space:nowrap;" onclick="addCustomRuleTask()">添加</button>
             </div>
 
             <!-- 弹窗下方的操作区：取消、确定 -->
@@ -8539,80 +8615,113 @@
 
             <!-- 弹窗内部独立滚动工作区 -->
             <div style="flex: 1; overflow-y: auto; padding: 16px 20px;">
-                <!-- 1. 表单字段：时间段横向并排 (移除输入框前置icon) -->
-                <div class="batch-form-row" style="margin-bottom: 12px;">
-                    <div class="batch-form-item">
-                        <span class="batch-required-star">*</span>
-                        <label class="batch-form-label">开始时间</label>
-                        <div class="batch-date-input-box">
-                            <input type="date" id="batchStartDate" class="form-input-standard" value="2026-11-02" placeholder="选择日期" onchange="onBatchDateRangeChange()">
-                        </div>
-                    </div>
-                    <div class="batch-form-item">
-                        <span class="batch-required-star">*</span>
-                        <label class="batch-form-label">结束时间</label>
-                        <div class="batch-date-input-box">
-                            <input type="date" id="batchEndDate" class="form-input-standard" value="2026-11-08" placeholder="选择日期" onchange="onBatchDateRangeChange()">
-                        </div>
-                    </div>
-                    <div class="batch-form-item">
-                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; color: #303133; user-select: none;">
-                            <input type="checkbox" id="batchWorkdayOnly" checked style="width: 15px; height: 15px; cursor: pointer; accent-color: #008fd5;" onchange="onBatchWorkdayOnlyChange()">
-                            <span>仅工作日</span>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- 2. 排班类型选择 (标准表单行，白底无背景填充，样式参考规范) -->
-                <div class="batch-form-row" style="margin-bottom: 12px;">
-                    <div class="batch-form-item">
-                        <span class="batch-required-star">*</span>
-                        <label class="batch-form-label">排班类型</label>
-                        <div style="display: flex; align-items: center; gap: 18px;">
-                            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 13px; color: #303133;">
-                                <input type="radio" name="batchSplitType" value="fixed" onchange="onBatchSplitTypeChange('fixed')">
-                                <span>时间段固定</span>
+                <!-- 1. 第一行位置：排班类型选择 (单选按钮组置顶，选中的文字和按钮为蓝色，参考规范截图) -->
+                <div class="batch-form-row" style="margin-bottom: 14px;">
+                    <div class="batch-form-item" style="display: flex; align-items: center; gap: 8px;">
+                        <span class="batch-required-star" style="color: #f56c6c;">*</span>
+                        <label class="batch-form-label" style="font-size: 13px; font-weight: 600; color: #303133;">排班类型</label>
+                        <div style="display: flex; align-items: center; gap: 20px;" id="batchSplitTypeRadioGroup">
+                            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px;" onclick="onBatchSplitTypeChange('fixed')">
+                                <input type="radio" name="batchSplitType" id="batchType_fixed" value="fixed" style="accent-color: #008fd5; cursor: pointer;" onchange="onBatchSplitTypeChange('fixed')">
+                                <span id="label_batchType_fixed" style="color: #303133;">时间段固定</span>
                             </label>
-                            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 13px; color: #303133;">
-                                <input type="radio" name="batchSplitType" value="daily" checked onchange="onBatchSplitTypeChange('daily')">
-                                <span style="font-weight: 600; color: #008fd5;">每日轮转</span>
+                            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px;" onclick="onBatchSplitTypeChange('daily')">
+                                <input type="radio" name="batchSplitType" id="batchType_daily" value="daily" checked style="accent-color: #008fd5; cursor: pointer;" onchange="onBatchSplitTypeChange('daily')">
+                                <span id="label_batchType_daily" style="font-weight: 600; color: #008fd5;">每日轮转</span>
                             </label>
-                            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 13px; color: #303133;">
-                                <input type="radio" name="batchSplitType" value="week" onchange="onBatchSplitTypeChange('week')">
-                                <span>按每周</span>
+                            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px;" onclick="onBatchSplitTypeChange('week')">
+                                <input type="radio" name="batchSplitType" id="batchType_week" value="week" style="accent-color: #008fd5; cursor: pointer;" onchange="onBatchSplitTypeChange('week')">
+                                <span id="label_batchType_week" style="color: #303133;">按每周</span>
                             </label>
-                            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 13px; color: #303133;">
-                                <input type="radio" name="batchSplitType" value="month" onchange="onBatchSplitTypeChange('month')">
-                                <span>按每月</span>
+                            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px;" onclick="onBatchSplitTypeChange('month')">
+                                <input type="radio" name="batchSplitType" id="batchType_month" value="month" style="accent-color: #008fd5; cursor: pointer;" onchange="onBatchSplitTypeChange('month')">
+                                <span id="label_batchType_month" style="color: #303133;">按每月</span>
                             </label>
-                            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 13px; color: #303133;">
-                                <input type="radio" name="batchSplitType" value="quarter" onchange="onBatchSplitTypeChange('quarter')">
-                                <span>按季度</span>
+                            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px;" onclick="onBatchSplitTypeChange('quarter')">
+                                <input type="radio" name="batchSplitType" id="batchType_quarter" value="quarter" style="accent-color: #008fd5; cursor: pointer;" onchange="onBatchSplitTypeChange('quarter')">
+                                <span id="label_batchType_quarter" style="color: #303133;">按季度</span>
                             </label>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. 第三行位置：轮空天数 (标准表单行，纯白底无背景填充，仅在每日轮转时显示) -->
+                <!-- 2. 第二行位置：每一个类型选择对应下方的排班日期 (按每周/按每月仅选年月，按季度仅选年份，固定/每日轮转选年月日起止时间) -->
+                <div class="batch-form-row" id="batchDateControlsRow" style="margin-bottom: 14px; display: flex; align-items: center; gap: 20px;">
+                    <!-- 2.1 时间段固定与每日轮转：具体的年月日起止时间 -->
+                    <div id="batchDateRangeControls" style="display: flex; align-items: center; gap: 20px;">
+                        <div class="batch-form-item" style="display: flex; align-items: center; gap: 8px;">
+                            <span class="batch-required-star" style="color: #f56c6c;">*</span>
+                            <label class="batch-form-label" style="font-size: 13px; color: #303133;">开始时间</label>
+                            <div class="batch-date-input-box">
+                                <input type="date" id="batchStartDate" class="form-input-standard" value="2026-11-02" placeholder="选择日期" onchange="onBatchDateRangeChange()" style="height: 30px; font-size: 12px;">
+                            </div>
+                        </div>
+                        <div class="batch-form-item" style="display: flex; align-items: center; gap: 8px;">
+                            <span class="batch-required-star" style="color: #f56c6c;">*</span>
+                            <label class="batch-form-label" style="font-size: 13px; color: #303133;">结束时间</label>
+                            <div class="batch-date-input-box">
+                                <input type="date" id="batchEndDate" class="form-input-standard" value="2026-11-08" placeholder="选择日期" onchange="onBatchDateRangeChange()" style="height: 30px; font-size: 12px;">
+                            </div>
+                        </div>
+                        <div class="batch-form-item">
+                            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; color: #303133; user-select: none;">
+                                <input type="checkbox" id="batchWorkdayOnly" checked style="width: 15px; height: 15px; cursor: pointer; accent-color: #008fd5;" onchange="onBatchWorkdayOnlyChange()">
+                                <span>仅工作日</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 2.2 按每周 / 按每月：起止两个时间组件 (仅选择年月) -->
+                    <div id="batchYearMonthControls" style="display: none; align-items: center; gap: 20px;">
+                        <div class="batch-form-item" style="display: flex; align-items: center; gap: 8px;">
+                            <span class="batch-required-star" style="color: #f56c6c;">*</span>
+                            <label class="batch-form-label" style="font-size: 13px; color: #303133;">开始年月</label>
+                            <div class="batch-date-input-box">
+                                <input type="month" id="batchStartYearMonth" class="form-input-standard" value="2026-11" onchange="onBatchYearMonthRangeChange()" style="height: 30px; font-size: 12px; width: 140px; padding: 0 8px;">
+                            </div>
+                        </div>
+                        <div class="batch-form-item" style="display: flex; align-items: center; gap: 8px;">
+                            <span class="batch-required-star" style="color: #f56c6c;">*</span>
+                            <label class="batch-form-label" style="font-size: 13px; color: #303133;">结束年月</label>
+                            <div class="batch-date-input-box">
+                                <input type="month" id="batchEndYearMonth" class="form-input-standard" value="2026-12" onchange="onBatchYearMonthRangeChange()" style="height: 30px; font-size: 12px; width: 140px; padding: 0 8px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2.3 按季度：仅选择年份 -->
+                    <div id="batchYearControls" style="display: none; align-items: center; gap: 8px;">
+                        <span class="batch-required-star" style="color: #f56c6c;">*</span>
+                        <label class="batch-form-label" style="font-size: 13px; color: #303133;">排班年份</label>
+                        <select id="batchYearSelect" class="form-input-standard" onchange="onBatchYearSelectChange()" style="height: 30px; font-size: 12px; width: 140px; padding: 0 8px; cursor: pointer;">
+                            <option value="2025">2025 年</option>
+                            <option value="2026" selected>2026 年</option>
+                            <option value="2027">2027 年</option>
+                            <option value="2028">2028 年</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 3. 第三行位置：轮空天数 (仅在每日轮转时显示) -->
                 <div class="batch-form-row" id="batchRollingDaysRow" style="margin-bottom: 14px; display: flex;">
-                    <div class="batch-form-item">
-                        <span class="batch-required-star">*</span>
-                        <label class="batch-form-label">轮空天数</label>
+                    <div class="batch-form-item" style="display: flex; align-items: center; gap: 8px;">
+                        <span class="batch-required-star" style="color: #f56c6c;">*</span>
+                        <label class="batch-form-label" style="font-size: 13px; color: #303133;">轮空天数</label>
                         <div style="display: flex; align-items: center; gap: 6px;">
-                            <input type="number" id="batchRollingRestDays" class="form-input-standard" value="0" min="0" max="30" style="width: 100px; height: 32px; padding: 0 8px; font-size: 13px;" onchange="onRollingRestDaysChange()">
+                            <input type="number" id="batchRollingRestDays" class="form-input-standard" value="0" min="0" max="30" style="width: 100px; height: 30px; padding: 0 8px; font-size: 13px;" onchange="onRollingRestDaysChange()">
                             <span style="font-size: 13px; color: #606266;">天</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. 明细表操作工具栏：新增岗位与删除按钮紧跟标题右侧 -->
+                <!-- 4. 明细表操作工具栏：新增岗位与删除按钮紧跟标题右侧 -->
                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px; margin-top: 4px;">
                     <span style="font-weight: 700; font-size: 13.5px; color: #1D2129;">岗位排班明细</span>
                     <button type="button" class="btn btn-blue" style="height: 26px; padding: 0 12px; font-size: 12px; background: #008fd5; color: #fff; border: 1px solid #008fd5; border-radius: 3px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-weight: 500;" onclick="openBatchPostPickerModal()">新增岗位</button>
                     <button type="button" class="btn btn-default" id="btnDeleteBatchPostRow" style="height: 26px; padding: 0 12px; font-size: 12px; color: #f53f3f; border: 1px solid #fecaca; background: #ffffff; border-radius: 3px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center;" onclick="deleteSelectedBatchPostRow()">删除</button>
                 </div>
 
-                <!-- 4. 下方明细表 (表头与列全部随排班类型自适应) -->
+                <!-- 5. 下方明细表 (表头与列全部随排班类型自适应) -->
                 <div id="batchDetailView" style="margin-bottom: 10px; overflow-x: auto; max-height: calc(88vh - 310px); border: 1px solid #ebeef5; border-radius: 4px;">
                     <table class="exact-detail-table" id="batchExactDetailTable" style="width: 100%; border-collapse: collapse; min-width: 960px;">
                         <thead id="batchTableThead">
@@ -8625,13 +8734,14 @@
                 </div>
             </div>
 
-            <!-- 弹窗底栏操作按钮组：采用规范固定在弹窗底部 -->
+            <!-- 弹窗底栏操作按钮组：取消、预览排班、暂存（草稿）、发布排班（正式生效） -->
             <div class="modal-footer-standard">
                 <div id="batchBottomStatusText"></div>
-                <div style="display: flex; gap: 8px;">
+                <div style="display: flex; gap: 8px; align-items: center;">
                     <button type="button" class="btn btn-default" style="height: 30px; padding: 0 16px; font-size: 13px; border: 1px solid #dcdfe6; background: #fff; color: #606266; border-radius: 3px; cursor: pointer;" onclick="closeBatchScheduleModal()">取消</button>
                     <button type="button" class="btn btn-default" style="height: 30px; padding: 0 16px; font-size: 13px; border: 1px solid #008fd5; color: #008fd5; background: #fff; border-radius: 3px; cursor: pointer;" onclick="openBatchSchedulePreviewModal()">预览排班</button>
-                    <button type="button" class="btn btn-blue" style="height: 30px; padding: 0 20px; font-size: 13px; background: #008fd5; color: #fff; border: none; border-radius: 3px; cursor: pointer; font-weight: 500;" onclick="confirmExecuteBatchSchedule()">确认排班</button>
+                    <button type="button" class="btn btn-default" style="height: 30px; padding: 0 16px; font-size: 13px; border: 1px solid #e6a23c; color: #e6a23c; background: #fff; border-radius: 3px; cursor: pointer; font-weight: 500;" onclick="saveBatchScheduleDraft()">暂存</button>
+                    <button type="button" class="btn btn-blue" style="height: 30px; padding: 0 20px; font-size: 13px; background: #008fd5; color: #fff; border: none; border-radius: 3px; cursor: pointer; font-weight: 500;" onclick="publishExecuteBatchSchedule()">发布排班</button>
                 </div>
             </div>
         </div>
@@ -8740,18 +8850,18 @@
                     </div>
                 </div>
 
-                <!-- 2.2 明细表工具栏 (右侧并排提供刷新和删除按钮，仅线框加文字) -->
+                <!-- 2.2 明细表工具栏 (右侧并排提供刷新和移除按钮，仅线框加文字) -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 4px;">
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <span style="font-weight: 700; font-size: 14px; color: #1D2129;">任务明细</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px;">
                         <button type="button" class="btn btn-default" style="height: 28px; padding: 0 12px; font-size: 12px; border: 1px solid #DCDFE6; background: #fff; color: #606266; border-radius: 3px; cursor: pointer;" onclick="refreshLaunchPostVerifyTable()">刷新</button>
-                        <button type="button" class="btn btn-default" style="height: 28px; padding: 0 12px; font-size: 12px; border: 1px solid #DCDFE6; background: #fff; color: #606266; border-radius: 3px; cursor: pointer;" onclick="deleteSelectedLaunchDutyRows()">删除</button>
+                        <button type="button" class="btn btn-default" style="height: 28px; padding: 0 12px; font-size: 12px; border: 1px solid #DCDFE6; background: #fff; color: #606266; border-radius: 3px; cursor: pointer;" onclick="deleteSelectedLaunchDutyRows()">移除</button>
                     </div>
                 </div>
 
-                <!-- 2.3 下方明细表 (完整展示，不设局部滚动，列包含：[复选框]、序号、岗位名称、所属专业组/大类、任务明细、在岗责任人、提醒周期) -->
+                <!-- 2.3 下方明细表 (列包含：[复选框]、序号、岗位名称、所属专业组、任务明细、在岗责任人、任务周期) -->
                 <div style="border: 1px solid #ebeef5; border-radius: 4px; background: #ffffff;">
                     <table class="exact-detail-table" style="width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed;">
                         <thead>
@@ -8761,10 +8871,10 @@
                                 </th>
                                 <th style="width: 45px; text-align: center; white-space: nowrap;">序号</th>
                                 <th style="width: 140px; text-align: left; padding-left: 10px; white-space: nowrap;">岗位名称</th>
-                                <th style="width: 110px; text-align: left; padding-left: 8px; white-space: nowrap;">所属专业组/大类</th>
+                                <th style="width: 110px; text-align: left; padding-left: 8px; white-space: nowrap;">所属专业组</th>
                                 <th style="text-align: left; padding-left: 8px; white-space: nowrap;">任务明细</th>
                                 <th style="width: 130px; text-align: left; padding-left: 8px; white-space: nowrap;">在岗责任人</th>
-                                <th style="width: 95px; text-align: center; white-space: nowrap;">提醒周期</th>
+                                <th style="width: 95px; text-align: center; white-space: nowrap;">任务周期</th>
                             </tr>
                         </thead>
                         <tbody id="launchPostVerifyTbody">
@@ -9875,6 +9985,52 @@
             selectMonth(year, monthMap[quarter] || 11);
         }
 
+        // 排班周期状态全局映射 (按年-月或视图维度记录：已发布、草稿、未排班)
+        const SCHEDULE_PERIOD_STATUS_MAP = {
+            '2026-11': '已发布',
+            '2026-10': '已发布',
+            '2026-12': '草稿'
+        };
+
+        // 更新顶部排班状态徽章展示 (随时间筛选/排班保存动态切换)
+        function updateTopScheduleStatusBadge() {
+            const badge = document.getElementById('topScheduleStatusBadge');
+            const dot = document.getElementById('topScheduleStatusDot');
+            const text = document.getElementById('topScheduleStatusText');
+            if (!badge || !text) return;
+
+            let key = `${currentYear}-${currentMonth < 10 ? '0' + currentMonth : currentMonth}`;
+            if (currentScheduleViewMode === 'month') {
+                key = `${currentYear}`;
+            } else if (currentScheduleViewMode === 'quarter') {
+                const q = Math.ceil(currentMonth / 3);
+                key = `${currentYear}-Q${q}`;
+            }
+
+            const status = SCHEDULE_PERIOD_STATUS_MAP[key] || '已发布';
+            text.innerText = status;
+
+            if (status === '已发布') {
+                badge.style.background = '#f0f9eb';
+                badge.style.border = '1px solid #b3e19d';
+                badge.style.color = '#67c23a';
+                if (dot) dot.style.background = '#67c23a';
+                badge.title = `当前周期 (${key}) 排班已正式生效`;
+            } else if (status === '草稿') {
+                badge.style.background = '#fdf6ec';
+                badge.style.border = '1px solid #f3d19e';
+                badge.style.color = '#e6a23c';
+                if (dot) dot.style.background = '#e6a23c';
+                badge.title = `当前周期 (${key}) 排班为暂存草稿`;
+            } else {
+                badge.style.background = '#f4f4f5';
+                badge.style.border = '1px solid #d3d4d6';
+                badge.style.color = '#909399';
+                if (dot) dot.style.background = '#909399';
+                badge.title = `当前周期 (${key}) 暂未排班`;
+            }
+        }
+
         // 统一主表格渲染入口
         function renderScheduleTable() {
             if (typeof syncViewPills === 'function') {
@@ -9888,6 +10044,7 @@
                 renderScheduleForCurrentMonth();
             }
             renderConcurrentPostsCards();
+            updateTopScheduleStatusBadge();
         }
 
         // 视图切换（日、月、季）
@@ -9897,15 +10054,10 @@
                 syncViewPills(mode);
             }
 
+            // 顶部基准年月格式保持稳定，不随下方模式跳变
             const displayEl = document.getElementById('monthPickerDisplay');
             if (displayEl) {
-                if (mode === 'month') {
-                    displayEl.innerText = `${currentYear} 年`;
-                } else if (mode === 'quarter') {
-                    displayEl.innerText = `${currentYear} 年度四季`;
-                } else {
-                    displayEl.innerText = `${currentYear}年 ${currentMonth < 10 ? '0' + currentMonth : currentMonth}月`;
-                }
+                displayEl.innerText = `${currentYear}年 ${currentMonth < 10 ? '0' + currentMonth : currentMonth}月`;
             }
 
             // 单日排班按钮：无论何种模式始终保持可用，绝不默认禁用
@@ -10225,18 +10377,96 @@
             });
         }
 
-        // 切换排班类型
+        // 同步排班类型单选视觉高亮 (选中文字与按钮为蓝色，对齐截图规范)
+        function syncBatchSplitTypeRadioVisual(activeType) {
+            const types = ['fixed', 'daily', 'week', 'month', 'quarter'];
+            types.forEach(t => {
+                const radio = document.getElementById(`batchType_${t}`);
+                const label = document.getElementById(`label_batchType_${t}`);
+                const isChecked = (t === activeType);
+                if (radio) radio.checked = isChecked;
+                if (label) {
+                    label.style.color = isChecked ? '#008fd5' : '#303133';
+                    label.style.fontWeight = isChecked ? '600' : 'normal';
+                }
+            });
+        }
+
+        // 切换排班类型 (按每周、按每月仅选择年月，按季度仅选择年份，时间段固定与每日轮转选具体年月日)
         function onBatchSplitTypeChange(newType) {
             currentBatchSplitType = newType;
+            syncBatchSplitTypeRadioVisual(newType);
 
-            // 轮空天数第三行表单项只在【每日轮转】展示
+            // 1. 动态切换日期控件可见性
+            const rangeControls = document.getElementById('batchDateRangeControls');
+            const ymControls = document.getElementById('batchYearMonthControls');
+            const yControls = document.getElementById('batchYearControls');
+
+            if (newType === 'week' || newType === 'month') {
+                if (rangeControls) rangeControls.style.display = 'none';
+                if (ymControls) ymControls.style.display = 'flex';
+                if (yControls) yControls.style.display = 'none';
+                onBatchYearMonthRangeChange();
+            } else if (newType === 'quarter') {
+                if (rangeControls) rangeControls.style.display = 'none';
+                if (ymControls) ymControls.style.display = 'none';
+                if (yControls) yControls.style.display = 'flex';
+                onBatchYearSelectChange();
+            } else {
+                // fixed 或 daily：具体年月日起止
+                if (rangeControls) rangeControls.style.display = 'flex';
+                if (ymControls) ymControls.style.display = 'none';
+                if (yControls) yControls.style.display = 'none';
+            }
+
+            // 2. 轮空天数第三行表单项只在【每日轮转】展示
             const rollingRow = document.getElementById('batchRollingDaysRow');
             if (rollingRow) {
                 rollingRow.style.display = (newType === 'daily') ? 'flex' : 'none';
             }
 
+            renderBatchPostTable();
+        }
 
+        // 年月起止选择器联动 (按每周 / 按每月：起止两个时间组件，只能选年月)
+        function onBatchYearMonthRangeChange() {
+            const startYmInput = document.getElementById('batchStartYearMonth');
+            const endYmInput = document.getElementById('batchEndYearMonth');
+            if (!startYmInput || !startYmInput.value) return;
 
+            let startVal = startYmInput.value;
+            let endVal = endYmInput ? endYmInput.value : startVal;
+            if (!endVal || endVal < startVal) {
+                endVal = startVal;
+                if (endYmInput) endYmInput.value = startVal;
+            }
+
+            const sParts = startVal.split('-');
+            const sy = parseInt(sParts[0]);
+            const sm = parseInt(sParts[1]);
+
+            const eParts = endVal.split('-');
+            const ey = parseInt(eParts[0]);
+            const em = parseInt(eParts[1]);
+            const endDaysCount = new Date(ey, em, 0).getDate();
+
+            const startInput = document.getElementById('batchStartDate');
+            const endInput = document.getElementById('batchEndDate');
+            if (startInput) startInput.value = `${sy}-${sm < 10 ? '0' + sm : sm}-01`;
+            if (endInput) endInput.value = `${ey}-${em < 10 ? '0' + em : em}-${endDaysCount < 10 ? '0' + endDaysCount : endDaysCount}`;
+
+            renderBatchPostTable();
+        }
+
+        // 年份下拉联动 (按季度)
+        function onBatchYearSelectChange() {
+            const ySelect = document.getElementById('batchYearSelect');
+            if (!ySelect) return;
+            const y = ySelect.value || currentYear;
+            const startInput = document.getElementById('batchStartDate');
+            const endInput = document.getElementById('batchEndDate');
+            if (startInput) startInput.value = `${y}-01-01`;
+            if (endInput) endInput.value = `${y}-12-31`;
             renderBatchPostTable();
         }
 
@@ -10747,17 +10977,12 @@
             if (startInput) startInput.value = `${currentYear}-${currentMonth < 10 ? '0' + currentMonth : currentMonth}-01`;
             if (endInput) endInput.value = `${currentYear}-${currentMonth < 10 ? '0' + currentMonth : currentMonth}-${daysCount < 10 ? '0' + daysCount : daysCount}`;
 
-            // 默认选中按每日
-            const radioDaily = document.querySelector('input[name="batchSplitType"][value="daily"]');
-            if (radioDaily) radioDaily.checked = true;
-            currentBatchSplitType = 'daily';
+            // 联动重置为每日轮转（单选高亮与日期行控制）
+            onBatchSplitTypeChange('daily');
 
             // 每日轮转控件初始化 (第三行轮空天数)
-            const rollingRow = document.getElementById('batchRollingDaysRow');
-            if (rollingRow) rollingRow.style.display = 'flex';
             const restDaysInput = document.getElementById('batchRollingRestDays');
             if (restDaysInput) restDaysInput.value = batchRollingRestDaysValue || 0;
-
 
             // 仅工作日复选框默认勾选
             const workdayOnlyEl = document.getElementById('batchWorkdayOnly');
@@ -10781,8 +11006,44 @@
         }
 
         // =========================================================================
-        // 核心：确定批量排班（提交时统一全量冲突校验与拦截，冲突人员框与姓名标红高亮）
+        // 核心：暂存批量排班（保存为草稿状态，不阻断发布，供后续继续微调）
         // =========================================================================
+        function saveBatchScheduleDraft() {
+            if (!batchRowsData || batchRowsData.length === 0) {
+                showToast("当前暂无选中的排班岗位！");
+                return;
+            }
+
+            const startVal = document.getElementById('batchStartDate') ? document.getElementById('batchStartDate').value : '';
+            const endVal = document.getElementById('batchEndDate') ? document.getElementById('batchEndDate').value : '';
+
+            // 提取周期 key
+            let periodKey = `${currentYear}-${currentMonth < 10 ? '0' + currentMonth : currentMonth}`;
+            if (currentBatchSplitType === 'quarter') {
+                const q = Math.ceil(currentMonth / 3);
+                periodKey = `${currentYear}-Q${q}`;
+            }
+
+            // 更新当前周期状态为【草稿】
+            SCHEDULE_PERIOD_STATUS_MAP[periodKey] = '草稿';
+
+            // 清理并关闭
+            batchConflictMap = {};
+            closeBatchScheduleModal();
+            closeBatchSchedulePreviewModal();
+
+            // 刷新大盘与顶部状态徽章
+            renderScheduleTable();
+            showToast(`✓ 批量排班已成功暂存为草稿！当前周期状态已更新为【草稿】`);
+        }
+
+        // =========================================================================
+        // 核心：发布批量排班（全量冲突校验拦截，通过后正式回写大盘生效，状态更新为已发布）
+        // =========================================================================
+        function publishExecuteBatchSchedule() {
+            confirmExecuteBatchSchedule();
+        }
+
         function confirmExecuteBatchSchedule() {
             if (!batchRowsData || batchRowsData.length === 0) {
                 showToast("当前暂无选中的排班岗位！");
@@ -10900,7 +11161,7 @@
             if (conflictsList.length > 0) {
                 renderBatchPostTable(); // 重新渲染，以触发 has-conflict 与姓名标红高亮
                 const firstConflict = conflictsList[0];
-                showToast(`❌ 无法提交：检测到 ${conflictsList.length} 处主岗排班冲突（如【${firstConflict.person}】在 ${firstConflict.dateStr} 同时安排【${firstConflict.postA}】与【${firstConflict.postB}】），已在表格中将冲突人员框及姓名标红高亮，请调整后再提交！`, 5000);
+                showToast(`❌ 无法发布：检测到 ${conflictsList.length} 处主岗排班冲突（如【${firstConflict.person}】在 ${firstConflict.dateStr} 同时安排【${firstConflict.postA}】与【${firstConflict.postB}】），已在表格中将冲突人员框及姓名标红高亮，请调整后再发布！`, 5000);
                 return;
             }
 
@@ -10917,14 +11178,22 @@
                 });
             });
 
+            // 更新当前周期状态为【已发布】
+            let periodKey = `${currentYear}-${currentMonth < 10 ? '0' + currentMonth : currentMonth}`;
+            if (currentBatchSplitType === 'quarter') {
+                const q = Math.ceil(currentMonth / 3);
+                periodKey = `${currentYear}-Q${q}`;
+            }
+            SCHEDULE_PERIOD_STATUS_MAP[periodKey] = '已发布';
+
             // 清理状态并关闭弹窗
             batchConflictMap = {};
             closeBatchScheduleModal();
             closeBatchSchedulePreviewModal();
 
-            // 刷新大盘视图
+            // 刷新大盘视图与状态徽章
             renderScheduleTable();
-            showToast(`✓ 批量排班成功发布！已为 ${batchRowsData.length} 个岗位增量更新 (${startVal} 至 ${endVal}) 排班安排！`);
+            showToast(`✓ 批量排班成功发布！已为 ${batchRowsData.length} 个岗位增量生效 (${startVal} 至 ${endVal}) 排班安排！`);
         }
 
         function openBatchSchedulePreviewModal() {
@@ -11281,45 +11550,6 @@
             }
         }
 
-        function exportExcel() {
-            const daysCount = new Date(currentYear, currentMonth, 0).getDate();
-            const monthData = getOrCreateMonthData(currentYear, currentMonth);
-
-            let header = ["工作岗位", "所属组别", "岗位类型"];
-            for (let d = 1; d <= daysCount; d++) {
-                header.push(`${currentMonth}月${d}日`);
-            }
-            header.push("负责项目明细");
-
-            let csvContent = "\ufeff" + header.join(",") + "\n";
-            POST_REGISTRY.forEach(post => {
-                const rowPeople = monthData[post.id] || [];
-                const row = [
-                    `"${post.title}"`,
-                    `"${post.group_name}"`,
-                    `"${post.post_type}"`
-                ];
-                for (let d = 1; d <= daysCount; d++) {
-                    const pList = parsePersons(rowPeople[d - 1]);
-                    row.push(`"${pList.join('、')}"`);
-                }
-                row.push(`"${post.items.join(" / ")}"`);
-                csvContent += row.join(",") + "\n";
-            });
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", `病理科与分子科排班表_${currentYear}年${currentMonth}月.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-
-            showToast(`✓ 导出成功！【${currentYear}年 ${currentMonth}月】排班表已自动下载。`);
-        }
-
         /* ================= 工业级排班规则维护核心引擎 (项目与任务拆分为两列 · 100% 对齐用户表格与截图样式) ================= */
 
         // 1. 初始化 7 个岗位大类标准字典 (辅助质控大类开启兼任，核心检验诊断大类关闭兼任)
@@ -11365,6 +11595,110 @@
                 '质量记录审核', '异常情况登记', '整改跟踪'
             ]
         };
+
+        // 3.1 任务待办周期配置字典 (支持每日、每周、每月)
+        const TASK_PERIOD_CONFIG = {
+            '核酸提取': '每日',
+            'PCR扩增与上机': '每日',
+            '扩增曲线判读': '每日',
+            '荧光原位杂交实验与结果判读': '每日',
+            '测序实验': '每周',
+            '峰图判读': '每周',
+            '文库构建': '每周',
+            '测序上机': '每周',
+            '测序数据分析': '每周',
+            '检测结果复核': '每日',
+            '检测报告初审': '每日',
+            '组织切片制备': '每日',
+            '常规染色': '每日',
+            '制片质量检查': '每日',
+            '病理图像阅片': '每日',
+            '诊断意见复核': '每日',
+            '报告签发': '每日',
+            '样本接收与信息核对': '每日',
+            '样本流转登记': '每日',
+            '外送样本管理': '每周',
+            '试剂耗材验收': '每月',
+            '库存与效期盘点': '每月',
+            '设备运行巡检': '每周',
+            '室内质量控制': '每周',
+            '生物安全检查': '每月',
+            '环境监测记录': '每周',
+            '质量记录审核': '每月',
+            '异常情况登记': '每周',
+            '整改跟踪': '每月'
+        };
+
+        // 获取任务所属的待办周期 (默认每日)
+        function getTaskPeriod(taskName) {
+            if (!taskName) return '每日';
+            const m = String(taskName).match(/\[(每日|每周|每月)\]/);
+            if (m) return m[1];
+            const pure = String(taskName).replace(/\[.*?\]/, '').trim();
+            return TASK_PERIOD_CONFIG[pure] || '每日';
+        }
+
+        // 获取纯净的任务名称 (去除 [每日] 等后缀)
+        function getPureTaskName(taskName) {
+            if (!taskName) return '';
+            return String(taskName).replace(/\[(每日|每周|每月)\]/, '').trim();
+        }
+
+        // 3.2 关联检查项目二级树形分类结构 (第一级：检测方法；第二级：具体项目，叶子节点是项目)
+        const RULE_PROJECT_TREE = [
+            {
+                method: '荧光PCR检测法',
+                projects: ['肺11', '肠四联', 'BRAF', 'WT1-PCR', '结核分枝杆菌核酸', '15种融合基因', 'TERT启动子突变', 'POLE突变']
+            },
+            {
+                method: '荧光原位杂交(FISH)',
+                projects: ['WT1-FISH', '骨髓融合基因', 'HER2扩增', 'ALK/ROS1断裂']
+            },
+            {
+                method: 'Sanger测序法',
+                projects: ['BCR/TCR重排', 'MSI微卫星不稳定', 'PDGFRA/KIT双基因']
+            },
+            {
+                method: '高通量测序(NGS)',
+                projects: ['BRCA1/2检测', '10基因Panel', '实体瘤大Panel文库', '单基因变异检测', '多基因变异检测', '基因融合检测', '靶向高通量测序检测']
+            },
+            {
+                method: '常规病理形态与制片',
+                projects: ['组织切片制备', '常规染色制片', '常规组织病理诊断', '快速病理诊断']
+            },
+            {
+                method: '管理与质控项目',
+                projects: ['外送标本核对', '跨院区交接', '试剂验收入库', '三证资质核查', '室内质量控制', '生物安全检查', '质量记录审核', '异常情况登记']
+            }
+        ];
+
+        // 3.3 任务明细二级树形分类结构 (第一列任务名称，第二列任务周期普通文本)
+        const RULE_TASK_TREE = [
+            {
+                category: '分子检验技术任务',
+                tasks: ['核酸提取', 'PCR扩增与上机', '扩增曲线判读', '荧光原位杂交实验与结果判读', '测序实验', '峰图判读', '文库构建', '测序上机', '测序数据分析']
+            },
+            {
+                category: '结果审核与报告签发',
+                tasks: ['检测结果复核', '检测报告初审', '病理图像阅片', '诊断意见复核', '报告签发']
+            },
+            {
+                category: '常规技术与病理制片',
+                tasks: ['组织切片制备', '常规染色', '制片质量检查']
+            },
+            {
+                category: '样本接收与流转登记',
+                tasks: ['样本接收与信息核对', '样本流转登记', '外送样本管理']
+            },
+            {
+                category: '试剂物料与设备巡检',
+                tasks: ['试剂耗材验收', '库存与效期盘点', '设备运行巡检']
+            },
+            {
+                category: '质量安全与环境监测',
+                tasks: ['室内质量控制', '生物安全检查', '环境监测记录', '质量记录审核', '异常情况登记', '整改跟踪']
+            }
+        ];
 
         // 4. 严格按照用户表格初始化的 10 个标准岗位 (项目与任务拆分为两列)
         let ruleRows = [
@@ -11553,14 +11887,35 @@
             updateRuleToolbarButtons();
         }
 
+        // 兼任属性单选高亮同步
+        function syncRuleGroupRadioVisual() {
+            const radioTrue = document.getElementById('radioEnabledTrue');
+            const isEnabled = radioTrue ? radioTrue.checked : true;
+            const labelTrue = document.getElementById('labelRadioEnabledTrue');
+            const labelFalse = document.getElementById('labelRadioEnabledFalse');
+            if (labelTrue) {
+                labelTrue.style.color = isEnabled ? '#008fd5' : '#303133';
+                labelTrue.style.fontWeight = isEnabled ? '600' : 'normal';
+            }
+            if (labelFalse) {
+                labelFalse.style.color = !isEnabled ? '#008fd5' : '#303133';
+                labelFalse.style.fontWeight = !isEnabled ? '600' : 'normal';
+            }
+        }
+
         // 弹窗新增大类
         function openAddRuleGroupModal() {
             document.getElementById('ruleGroupModalTitle').innerText = '新增岗位大类';
             document.getElementById('ruleGroupEditId').value = '';
-            document.getElementById('ruleGroupNameInput').value = '';
+            const nameInput = document.getElementById('ruleGroupNameInput');
+            if (nameInput) {
+                nameInput.value = '';
+                nameInput.placeholder = '';
+            }
             document.getElementById('radioEnabledTrue').checked = true; // 默认开启兼任
+            syncRuleGroupRadioVisual();
             document.getElementById('ruleGroupModal').style.display = 'flex';
-            setTimeout(() => { document.getElementById('ruleGroupNameInput').focus(); }, 100);
+            setTimeout(() => { if (nameInput) nameInput.focus(); }, 100);
         }
 
         // 修改当前选中大类的名称与兼任开关
@@ -11569,12 +11924,17 @@
             if (!group) return;
             document.getElementById('ruleGroupModalTitle').innerText = `修改大类 · ${group.name}`;
             document.getElementById('ruleGroupEditId').value = group.id;
-            document.getElementById('ruleGroupNameInput').value = group.name;
+            const nameInput = document.getElementById('ruleGroupNameInput');
+            if (nameInput) {
+                nameInput.value = group.name;
+                nameInput.placeholder = '';
+            }
             if (group.enabled) {
                 document.getElementById('radioEnabledTrue').checked = true;
             } else {
                 document.getElementById('radioEnabledFalse').checked = true;
             }
+            syncRuleGroupRadioVisual();
             document.getElementById('ruleGroupModal').style.display = 'flex';
         }
 
@@ -11641,7 +12001,7 @@
             }
         }
 
-        // 渲染中间岗位明细数据表格 (多选列用分号隔开，不使用标签样式)
+        // 渲染中间岗位明细数据表格 (右侧区域标题固定为“岗位明细”，任务明细带周期标签)
         function renderRuleConfig() {
             const tbody = document.getElementById('ruleConfigRows');
             if (!tbody) return;
@@ -11649,18 +12009,8 @@
             const group = ruleGroups.find(g => g.id === ruleSelectedGroupId);
             const titleEl = document.getElementById('ruleConfigTitle');
             const badgeEl = document.getElementById('ruleConfigGroupBadge');
-            if (titleEl && group) titleEl.innerText = `岗位明细 · ${group.name}`;
-            if (badgeEl && group) {
-                if (group.enabled) {
-                    badgeEl.style.display = 'inline-block';
-                    badgeEl.innerText = '兼任';
-                    badgeEl.style.color = '#529b2e';
-                    badgeEl.style.background = '#f0f9eb';
-                    badgeEl.style.borderColor = '#c2e7b0';
-                } else {
-                    badgeEl.style.display = 'none';
-                }
-            }
+            if (titleEl) titleEl.innerText = '岗位明细';
+            if (badgeEl) badgeEl.style.display = 'none';
 
             const rowsInGroup = ruleRows.filter(r => r.groupId === ruleSelectedGroupId);
 
@@ -11718,13 +12068,17 @@
                     </tr>`;
                 }
 
-                // ========== 普通行的【只读展示状态】：纯文本以分号隔开，不用标签样式 ==========
+                // ========== 普通行的【只读展示状态】：任务明细带周期小标签 ==========
                 const projectsText = (row.projects && row.projects.length > 0)
                     ? escapeRuleHtml(row.projects.join('; '))
                     : `<span style="color:#909399;">—</span>`;
 
                 const tasksText = (row.tasks && row.tasks.length > 0)
-                    ? escapeRuleHtml(row.tasks.join('; '))
+                    ? row.tasks.map(t => {
+                        const pName = escapeRuleHtml(getPureTaskName(t));
+                        const period = escapeRuleHtml(getTaskPeriod(t));
+                        return `<span class="rule-task-item" style="display:inline-flex; align-items:center; gap:3px; background:#f4f4f5; border:1px solid #e9e9eb; border-radius:3px; padding:1px 6px; margin:2px 4px 2px 0; font-size:12px; color:#303133;">${pName}<span style="font-size:11px; color:#008fd5; background:#e6f7ff; border:1px solid #91d5ff; border-radius:2px; padding:0 3px; font-weight:500;">[${period}]</span></span>`;
+                    }).join('')
                     : `<span style="color:#909399;">—</span>`;
 
                 const peopleText = (row.people && row.people.length > 0)
@@ -11974,75 +12328,155 @@
             renderRuleProjectPickerSelected();
         }
 
+        let ruleProjectTreeCollapsedMap = {};
+        let ruleTaskTreeCollapsedMap = {};
+
+        function getRuleTaskTreeWithCustom() {
+            const treeData = JSON.parse(JSON.stringify(RULE_TASK_TREE));
+            const existingTasksInTree = new Set();
+            treeData.forEach(g => g.tasks.forEach(t => existingTasksInTree.add(t)));
+
+            const customTasks = ruleItemCatalog.task.filter(t => !existingTasksInTree.has(t));
+            if (customTasks.length > 0) {
+                treeData.push({
+                    category: '自定义及其他任务',
+                    tasks: customTasks
+                });
+            }
+            return treeData;
+        }
+
         function closeRuleProjectPicker(e) {
             if (e && e.target && e.target.id !== 'ruleProjectPickerModal') return;
             document.getElementById('ruleProjectPickerModal').style.display = 'none';
         }
 
+        // 项目树：切换展开/折叠
+        function toggleProjectTreeCollapse(methodName, e) {
+            if (e) e.stopPropagation();
+            ruleProjectTreeCollapsedMap[methodName] = !ruleProjectTreeCollapsedMap[methodName];
+            renderRuleProjectPicker(document.getElementById('ruleProjectPickerSearch')?.value || '');
+        }
+
+        // 项目树：父级分类全选/反选 (支持部分选中半选逻辑)
+        function toggleProjectTreeGroup(methodName, e) {
+            if (e) e.stopPropagation();
+            const group = RULE_PROJECT_TREE.find(g => g.method === methodName);
+            if (!group) return;
+            const kw = (document.getElementById('ruleProjectPickerSearch')?.value || '').trim().toLowerCase();
+            const matched = group.projects.filter(p => !kw || p.toLowerCase().includes(kw) || group.method.toLowerCase().includes(kw));
+            if (matched.length === 0) return;
+
+            const allChecked = matched.every(p => inlinePickerDraftProjects.includes(p));
+            if (allChecked) {
+                inlinePickerDraftProjects = inlinePickerDraftProjects.filter(p => !matched.includes(p));
+            } else {
+                matched.forEach(p => {
+                    if (!inlinePickerDraftProjects.includes(p)) inlinePickerDraftProjects.push(p);
+                });
+            }
+            renderRuleProjectPicker(kw);
+            renderRuleProjectPickerSelected();
+        }
+
+        // 项目树：单个叶子节点勾选/取消
+        function toggleProjectTreeLeaf(pName, e) {
+            if (e) e.stopPropagation();
+            if (inlinePickerDraftProjects.includes(pName)) {
+                inlinePickerDraftProjects = inlinePickerDraftProjects.filter(p => p !== pName);
+            } else {
+                inlinePickerDraftProjects.push(pName);
+            }
+            const kw = document.getElementById('ruleProjectPickerSearch')?.value || '';
+            renderRuleProjectPicker(kw);
+            renderRuleProjectPickerSelected();
+        }
+
+        // 渲染按检测方法分类的二级树结构 (叶子节点为具体项目，无卡片分区，无数值小计，文字始终为普通黑色)
         function renderRuleProjectPicker(keyword) {
             const container = document.getElementById('ruleProjectPickerOptions');
             if (!container) return;
             const kw = (keyword || '').trim().toLowerCase();
-            const list = ruleItemCatalog.project.filter(name => !kw || name.toLowerCase().includes(kw));
 
-            container.innerHTML = list.map(name => {
-                const isChecked = inlinePickerDraftProjects.includes(name);
-                return `
-                <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#303133; cursor:pointer; padding:4px 6px; border-radius:3px; margin-bottom:2px;">
-                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInlineProjectCheck('${escapeRuleHtml(name)}', this.checked)">
-                    <span>${escapeRuleHtml(name)}</span>
-                </label>`;
-            }).join('');
-            document.getElementById('ruleProjectPickerCount').innerText = `已选 ${inlinePickerDraftProjects.length} 项`;
-        }
+            let html = '';
 
-        function toggleInlineProjectCheck(name, checked) {
-            if (checked) {
-                if (!inlinePickerDraftProjects.includes(name)) inlinePickerDraftProjects.push(name);
-            } else {
-                inlinePickerDraftProjects = inlinePickerDraftProjects.filter(n => n !== name);
+            RULE_PROJECT_TREE.forEach(group => {
+                const matchedProjects = group.projects.filter(pName => {
+                    if (!kw) return true;
+                    return pName.toLowerCase().includes(kw) || group.method.toLowerCase().includes(kw);
+                });
+
+                if (matchedProjects.length === 0) return;
+
+                const selectedInGroupCount = matchedProjects.filter(p => inlinePickerDraftProjects.includes(p)).length;
+                const isCollapsed = !!ruleProjectTreeCollapsedMap[group.method];
+
+                // 计算父级复选框状态：全选 checked、半选 indeterminate、未选
+                let parentCheckClass = '';
+                if (selectedInGroupCount === matchedProjects.length && matchedProjects.length > 0) {
+                    parentCheckClass = 'checked';
+                } else if (selectedInGroupCount > 0) {
+                    parentCheckClass = 'indeterminate';
+                }
+
+                html += `
+                <div class="tree-group-wrap" style="margin-bottom: 2px;">
+                    <!-- 一级父节点行：箭头 + 复选框 + 分类名称 (无卡片边框背景，不加小计) -->
+                    <div class="tree-parent-node" style="display: flex; align-items: center; height: 28px; padding: 0 4px; border-radius: 3px; cursor: pointer; user-select: none;" onmouseover="this.style.background='#f5f7fa'" onmouseout="this.style.background='transparent'">
+                        <span class="tree-node-arrow ${isCollapsed ? 'collapsed' : 'expanded'}" onclick="toggleProjectTreeCollapse('${escapeRuleHtml(group.method)}', event)" title="${isCollapsed ? '展开' : '折叠'}">▼</span>
+                        <span class="tree-custom-checkbox ${parentCheckClass}" onclick="toggleProjectTreeGroup('${escapeRuleHtml(group.method)}', event)" title="全选/反选本组"></span>
+                        <span style="font-size: 12px; color: #303133; font-weight: 500;" onclick="toggleProjectTreeCollapse('${escapeRuleHtml(group.method)}', event)">${escapeRuleHtml(group.method)}</span>
+                    </div>
+
+                    <!-- 二级叶子节点：具体项目 (纵向排列，层级缩进，已选文字保持普通黑色无特殊样式) -->
+                    <div style="display: ${isCollapsed ? 'none' : 'flex'}; flex-direction: column; padding-left: 20px;">
+                        ${matchedProjects.map(pName => {
+                            const isChecked = inlinePickerDraftProjects.includes(pName);
+                            return `
+                            <div class="tree-leaf-row" onclick="toggleProjectTreeLeaf('${escapeRuleHtml(pName)}', event)" style="display: flex; align-items: center; height: 26px; padding: 0 4px; border-radius: 3px; cursor: pointer; background: transparent;" onmouseover="this.style.background='#f5f7fa'" onmouseout="this.style.background='transparent'">
+                                <span class="tree-custom-checkbox ${isChecked ? 'checked' : ''}" style="pointer-events: none;"></span>
+                                <span style="font-size: 12px; color: #303133; font-weight: normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeRuleHtml(pName)}">${escapeRuleHtml(pName)}</span>
+                            </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                `;
+            });
+
+            if (!html) {
+                html = `<div style="padding: 30px 0; text-align: center; color: #909399; font-size: 12px;">未匹配到相关检测方法或项目</div>`;
             }
-            document.getElementById('ruleProjectPickerCount').innerText = `已选 ${inlinePickerDraftProjects.length} 项`;
-            renderRuleProjectPickerSelected();
+
+            container.innerHTML = html;
         }
 
+        // 渲染已选检测项目列表 (纵向排列，对齐截图纯文本简洁样式)
         function renderRuleProjectPickerSelected() {
             const box = document.getElementById('ruleProjectPickerSelected');
             if (!box) return;
             if (inlinePickerDraftProjects.length === 0) {
-                box.innerHTML = `<div style="padding:20px 0; text-align:center; color:#909399; font-size:12px;">暂无已选项目</div>`;
+                box.innerHTML = `<div style="padding: 40px 0; text-align: center; color: #c0c4cc; font-size: 12px;">暂无已选项目</div>`;
                 return;
             }
             box.innerHTML = inlinePickerDraftProjects.map((name, idx) => `
-                <div style="display:flex; align-items:center; justify-content:space-between; padding:4px 8px; margin-bottom:4px; background:#edf6ff; border:1px solid #b3d8ff; border-radius:3px; font-size:12px;">
-                    <span style="color:#008fd5; font-weight:600;">${escapeRuleHtml(name)}</span>
-                    <span onclick="removeInlineProjectDraft(${idx})" style="color:#f56c6c; cursor:pointer; font-size:14px; font-weight:700;">×</span>
+                <div style="display: flex; align-items: center; justify-content: space-between; height: 28px; padding: 0 8px; border-radius: 3px; font-size: 12px; color: #303133; border-bottom: 1px dashed #f0f2f5; transition: background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeRuleHtml(name)}">${escapeRuleHtml(name)}</span>
+                    <span onclick="removeInlineProjectDraft(${idx})" style="color: #909399; cursor: pointer; font-size: 15px; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#f56c6c'" onmouseout="this.style.color='#909399'" title="移除">×</span>
                 </div>
             `).join('');
         }
 
         function removeInlineProjectDraft(idx) {
             inlinePickerDraftProjects.splice(idx, 1);
-            renderRuleProjectPicker(document.getElementById('ruleProjectPickerSearch').value);
+            renderRuleProjectPicker(document.getElementById('ruleProjectPickerSearch')?.value || '');
             renderRuleProjectPickerSelected();
         }
 
         function clearRuleProjectPicker() {
             inlinePickerDraftProjects = [];
-            renderRuleProjectPicker(document.getElementById('ruleProjectPickerSearch').value);
+            renderRuleProjectPicker(document.getElementById('ruleProjectPickerSearch')?.value || '');
             renderRuleProjectPickerSelected();
-        }
-
-        function addCustomRuleProject() {
-            const input = document.getElementById('ruleCustomProjectInput');
-            const val = input.value.trim();
-            if (!val) return;
-            if (!inlinePickerDraftProjects.includes(val)) {
-                inlinePickerDraftProjects.push(val);
-            }
-            input.value = '';
-            renderRuleProjectPickerSelected();
-            document.getElementById('ruleProjectPickerCount').innerText = `已选 ${inlinePickerDraftProjects.length} 项`;
         }
 
         function confirmRuleProjectPicker() {
@@ -12077,70 +12511,188 @@
             document.getElementById('ruleTaskPickerModal').style.display = 'none';
         }
 
+        // 任务树：切换展开/折叠
+        function toggleTaskTreeCollapse(categoryName, e) {
+            if (e) e.stopPropagation();
+            ruleTaskTreeCollapsedMap[categoryName] = !ruleTaskTreeCollapsedMap[categoryName];
+            renderRuleTaskPicker(document.getElementById('ruleTaskPickerSearch')?.value || '');
+        }
+
+        // 任务树：父级类别全选/反选 (支持部分选中半选逻辑)
+        function toggleTaskTreeGroup(categoryName, e) {
+            if (e) e.stopPropagation();
+            const kw = (document.getElementById('ruleTaskPickerSearch')?.value || '').trim().toLowerCase();
+            const treeData = getRuleTaskTreeWithCustom();
+            const group = treeData.find(g => g.category === categoryName);
+            if (!group) return;
+
+            const matched = group.tasks.filter(name => {
+                const pure = getPureTaskName(name);
+                const period = getTaskPeriod(name);
+                return !kw || pure.toLowerCase().includes(kw) || period.toLowerCase().includes(kw) || group.category.toLowerCase().includes(kw);
+            });
+            if (matched.length === 0) return;
+
+            const allChecked = matched.every(name => {
+                const pure = getPureTaskName(name);
+                return inlinePickerDraftTasks.some(t => getPureTaskName(t) === pure);
+            });
+
+            if (allChecked) {
+                const matchedPures = matched.map(m => getPureTaskName(m));
+                inlinePickerDraftTasks = inlinePickerDraftTasks.filter(t => !matchedPures.includes(getPureTaskName(t)));
+            } else {
+                matched.forEach(name => {
+                    const pure = getPureTaskName(name);
+                    if (!inlinePickerDraftTasks.some(t => getPureTaskName(t) === pure)) {
+                        inlinePickerDraftTasks.push(name);
+                    }
+                });
+            }
+            renderRuleTaskPicker(kw);
+            renderRuleTaskPickerSelected();
+        }
+
+        // 任务树：单个叶子节点勾选/取消
+        function toggleTaskTreeLeaf(taskName, e) {
+            if (e) e.stopPropagation();
+            const pure = getPureTaskName(taskName);
+            const exists = inlinePickerDraftTasks.some(t => getPureTaskName(t) === pure);
+            if (exists) {
+                inlinePickerDraftTasks = inlinePickerDraftTasks.filter(t => getPureTaskName(t) !== pure);
+            } else {
+                inlinePickerDraftTasks.push(taskName);
+            }
+            const kw = document.getElementById('ruleTaskPickerSearch')?.value || '';
+            renderRuleTaskPicker(kw);
+            renderRuleTaskPickerSelected();
+        }
+
+        // 渲染按专业类别划分的任务明细二级树 (两列结构：无卡片分区，无数值小计，文字始终为普通黑色)
         function renderRuleTaskPicker(keyword) {
             const container = document.getElementById('ruleTaskPickerOptions');
             if (!container) return;
             const kw = (keyword || '').trim().toLowerCase();
-            const list = ruleItemCatalog.task.filter(name => !kw || name.toLowerCase().includes(kw));
 
-            container.innerHTML = list.map(name => {
-                const isChecked = inlinePickerDraftTasks.includes(name);
-                return `
-                <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#303133; cursor:pointer; padding:4px 6px; border-radius:3px; margin-bottom:2px;">
-                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInlineTaskCheck('${escapeRuleHtml(name)}', this.checked)">
-                    <span>${escapeRuleHtml(name)}</span>
-                </label>`;
-            }).join('');
-            document.getElementById('ruleTaskPickerCount').innerText = `已选 ${inlinePickerDraftTasks.length} 项`;
-        }
+            const treeData = getRuleTaskTreeWithCustom();
+            let html = '';
 
-        function toggleInlineTaskCheck(name, checked) {
-            if (checked) {
-                if (!inlinePickerDraftTasks.includes(name)) inlinePickerDraftTasks.push(name);
-            } else {
-                inlinePickerDraftTasks = inlinePickerDraftTasks.filter(n => n !== name);
+            treeData.forEach(group => {
+                const matchedTasks = group.tasks.filter(name => {
+                    const pure = getPureTaskName(name);
+                    const period = getTaskPeriod(name);
+                    if (!kw) return true;
+                    return pure.toLowerCase().includes(kw) || period.toLowerCase().includes(kw) || group.category.toLowerCase().includes(kw);
+                });
+
+                if (matchedTasks.length === 0) return;
+
+                const selectedInGroupCount = matchedTasks.filter(name => inlinePickerDraftTasks.includes(name) || inlinePickerDraftTasks.some(t => getPureTaskName(t) === getPureTaskName(name))).length;
+                const isCollapsed = !!ruleTaskTreeCollapsedMap[group.category];
+
+                // 计算父级复选框状态：全选 checked、半选 indeterminate、未选
+                let parentCheckClass = '';
+                if (selectedInGroupCount === matchedTasks.length && matchedTasks.length > 0) {
+                    parentCheckClass = 'checked';
+                } else if (selectedInGroupCount > 0) {
+                    parentCheckClass = 'indeterminate';
+                }
+
+                html += `
+                <div class="tree-group-wrap" style="margin-bottom: 2px;">
+                    <!-- 一级父节点行：展开箭头 + 复选框 + 分类名称 (无卡片边框背景，不加小计) -->
+                    <div class="tree-parent-node" style="display: flex; align-items: center; height: 28px; padding: 0 4px; border-radius: 3px; cursor: pointer; user-select: none;" onmouseover="this.style.background='#f5f7fa'" onmouseout="this.style.background='transparent'">
+                        <span class="tree-node-arrow ${isCollapsed ? 'collapsed' : 'expanded'}" onclick="toggleTaskTreeCollapse('${escapeRuleHtml(group.category)}', event)" title="${isCollapsed ? '展开' : '折叠'}">▼</span>
+                        <span class="tree-custom-checkbox ${parentCheckClass}" onclick="toggleTaskTreeGroup('${escapeRuleHtml(group.category)}', event)" title="全选/反选本组"></span>
+                        <span style="font-weight: 500; font-size: 12px; color: #303133; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" onclick="toggleTaskTreeCollapse('${escapeRuleHtml(group.category)}', event)">${escapeRuleHtml(group.category)}</span>
+                    </div>
+
+                    <!-- 二级叶子节点：两列布局 (第一列复选框+普通黑色任务名称，第二列普通文本周期，无卡片分区，已选文字普通黑色) -->
+                    <div style="display: ${isCollapsed ? 'none' : 'flex'}; flex-direction: column; padding-left: 20px;">
+                        ${matchedTasks.map(name => {
+                            const pureName = getPureTaskName(name);
+                            const period = getTaskPeriod(name);
+                            const isChecked = inlinePickerDraftTasks.includes(name) || inlinePickerDraftTasks.some(t => getPureTaskName(t) === pureName);
+                            return `
+                            <div class="tree-leaf-row" onclick="toggleTaskTreeLeaf('${escapeRuleHtml(name)}', event)" style="display: flex; align-items: center; justify-content: space-between; height: 26px; padding: 0 4px; border-radius: 3px; cursor: pointer; background: transparent;" onmouseover="this.style.background='#f5f7fa'" onmouseout="this.style.background='transparent'">
+                                <!-- 第一列：任务名称 (含自定义复选框，文字始终为普通黑色) -->
+                                <div style="display: flex; align-items: center; flex: 1; min-width: 0;">
+                                    <span class="tree-custom-checkbox ${isChecked ? 'checked' : ''}" style="pointer-events: none;"></span>
+                                    <span style="font-size: 12px; color: #303133; font-weight: normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeRuleHtml(pureName)}">${escapeRuleHtml(pureName)}</span>
+                                </div>
+                                <!-- 第二列：任务周期 (普通文本展示，无药丸背景) -->
+                                <span style="width: 70px; text-align: center; color: #606266; font-size: 12px; font-weight: normal; flex-shrink: 0;">${escapeRuleHtml(period)}</span>
+                            </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+                `;
+            });
+
+            if (!html) {
+                html = `<div style="padding: 30px 0; text-align: center; color: #909399; font-size: 12px;">未匹配到相关任务</div>`;
             }
-            document.getElementById('ruleTaskPickerCount').innerText = `已选 ${inlinePickerDraftTasks.length} 项`;
-            renderRuleTaskPickerSelected();
+
+            container.innerHTML = html;
         }
 
+        // 渲染已选任务明细列表 (纵向排列，对齐截图纯文本简洁样式)
         function renderRuleTaskPickerSelected() {
             const box = document.getElementById('ruleTaskPickerSelected');
             if (!box) return;
             if (inlinePickerDraftTasks.length === 0) {
-                box.innerHTML = `<div style="padding:20px 0; text-align:center; color:#909399; font-size:12px;">暂无已选任务</div>`;
+                box.innerHTML = `<div style="padding: 40px 0; text-align: center; color: #c0c4cc; font-size: 12px;">暂无已选任务</div>`;
                 return;
             }
-            box.innerHTML = inlinePickerDraftTasks.map((name, idx) => `
-                <div style="display:flex; align-items:center; justify-content:space-between; padding:4px 8px; margin-bottom:4px; background:#f0f9eb; border:1px solid #c2e7b0; border-radius:3px; font-size:12px;">
-                    <span style="color:#67c23a; font-weight:600;">${escapeRuleHtml(name)}</span>
-                    <span onclick="removeInlineTaskDraft(${idx})" style="color:#f56c6c; cursor:pointer; font-size:14px; font-weight:700;">×</span>
-                </div>
-            `).join('');
+            box.innerHTML = inlinePickerDraftTasks.map((name, idx) => {
+                const pureName = getPureTaskName(name);
+                const period = getTaskPeriod(name);
+                return `
+                <div style="display: flex; align-items: center; justify-content: space-between; height: 28px; padding: 0 8px; border-radius: 3px; font-size: 12px; color: #303133; border-bottom: 1px dashed #f0f2f5; transition: background 0.15s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='transparent'">
+                    <div style="display: flex; align-items: center; gap: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                        <span style="font-weight: 500;">${escapeRuleHtml(pureName)}</span>
+                        <span style="color: #909399; font-size: 11px;">(${escapeRuleHtml(period)})</span>
+                    </div>
+                    <span onclick="removeInlineTaskDraft(${idx})" style="color: #909399; cursor: pointer; font-size: 15px; padding: 0 4px; line-height: 1;" onmouseover="this.style.color='#f56c6c'" onmouseout="this.style.color='#909399'" title="移除">×</span>
+                </div>`;
+            }).join('');
         }
 
         function removeInlineTaskDraft(idx) {
             inlinePickerDraftTasks.splice(idx, 1);
-            renderRuleTaskPicker(document.getElementById('ruleTaskPickerSearch').value);
+            renderRuleTaskPicker(document.getElementById('ruleTaskPickerSearch')?.value || '');
             renderRuleTaskPickerSelected();
         }
 
         function clearRuleTaskPicker() {
             inlinePickerDraftTasks = [];
-            renderRuleTaskPicker(document.getElementById('ruleTaskPickerSearch').value);
+            renderRuleTaskPicker(document.getElementById('ruleTaskPickerSearch')?.value || '');
             renderRuleTaskPickerSelected();
         }
 
+        // 自定义新增任务：必须同时维护名称和任务周期下拉
         function addCustomRuleTask() {
             const input = document.getElementById('ruleCustomTaskInput');
+            const periodSelect = document.getElementById('ruleCustomTaskPeriodSelect');
             const val = input.value.trim();
-            if (!val) return;
+            const period = periodSelect ? periodSelect.value : '每日';
+            if (!val) {
+                showToast('请先输入任务名称！');
+                return;
+            }
+
+            TASK_PERIOD_CONFIG[val] = period;
+            if (!ruleItemCatalog.task.includes(val)) {
+                ruleItemCatalog.task.push(val);
+            }
             if (!inlinePickerDraftTasks.includes(val)) {
                 inlinePickerDraftTasks.push(val);
             }
             input.value = '';
+            renderRuleTaskPicker(document.getElementById('ruleTaskPickerSearch')?.value || '');
             renderRuleTaskPickerSelected();
-            document.getElementById('ruleTaskPickerCount').innerText = `已选 ${inlinePickerDraftTasks.length} 项`;
+            showToast(`✓ 已新增任务【${val}】(${period})`);
         }
 
         function confirmRuleTaskPicker() {
@@ -13059,24 +13611,26 @@
         }
     }
 
+    // 移除已勾选任务明细 (对齐规范文案：移除)
     function deleteSelectedLaunchDutyRows() {
         const checkedCbs = document.querySelectorAll('.launch-row-checkbox:checked');
         if (!checkedCbs || checkedCbs.length === 0) {
-            showToast('请先勾选需要删除的任务明细！');
+            showToast('请先勾选需要移除的任务明细！');
             return;
         }
-        const selectedPostIds = new Set();
-        checkedCbs.forEach(cb => selectedPostIds.add(cb.value));
-        currentLaunchDutyRows = currentLaunchDutyRows.filter(r => !selectedPostIds.has(r.postId));
+        const selectedKeys = new Set();
+        checkedCbs.forEach(cb => selectedKeys.add(cb.value));
+        currentLaunchDutyRows = currentLaunchDutyRows.filter(r => !selectedKeys.has(r.rowKey));
         renderLaunchPostVerifyTable(true);
-        showToast(`已删除 ${selectedPostIds.size} 项任务明细`);
+        showToast(`已移除 ${selectedKeys.size} 项任务明细`);
     }
 
-    function deleteLaunchDutyRow(postId) {
-        currentLaunchDutyRows = currentLaunchDutyRows.filter(r => r.postId !== postId);
+    function deleteLaunchDutyRow(rowKey) {
+        currentLaunchDutyRows = currentLaunchDutyRows.filter(r => r.rowKey !== rowKey);
         renderLaunchPostVerifyTable(true);
     }
 
+    // 渲染待办核对表格 (每一个任务单独一行，任务周期为只读字段)
     function renderLaunchPostVerifyTable(keepCurrentData = false) {
         const tbody = document.getElementById('launchPostVerifyTbody');
         if (!tbody) return;
@@ -13122,25 +13676,37 @@
                     return;
                 }
 
-                // 同一岗位多个责任人合并展示（顿号隔开）
                 const personsArray = Array.from(dutyPersonSet);
                 const dutyPersonsDisplay = personsArray.join('、');
 
-                // 任务明细（多个任务用分号；隔开）
-                let taskText = POST_DUTY_TASK_MAP[post.id] || (post.items && post.items.length > 0 ? post.items.join('；') : post.title);
+                // 提取该岗位下的所有细分任务
+                let rawTaskList = [];
+                const matchedRule = ruleRows.find(r => r.name === post.title || r.id === post.id);
+                if (matchedRule && matchedRule.tasks && matchedRule.tasks.length > 0) {
+                    rawTaskList = [...matchedRule.tasks];
+                } else if (POST_DUTY_TASK_MAP[post.id]) {
+                    rawTaskList = POST_DUTY_TASK_MAP[post.id].split(/[；;]/).map(s => s.trim()).filter(Boolean);
+                } else if (post.items && post.items.length > 0) {
+                    rawTaskList = [...post.items];
+                } else {
+                    rawTaskList = [post.title];
+                }
 
-                // 默认提醒周期：巡检岗位默认每日，常规排班默认每周
-                let defaultPeriod = (post.groupId === 'quality-safety' || post.title.includes('巡检')) ? '每日' : '每周';
-
-                currentLaunchDutyRows.push({
-                    postId: post.id,
-                    postTitle: post.title,
-                    groupName: post.group_name || '检测组',
-                    tasks: taskText,
-                    persons: personsArray,
-                    personsDisplay: dutyPersonsDisplay,
-                    dailyDutyMap: dailyDutyMap,
-                    reminderPeriod: defaultPeriod
+                // 每一个任务都单独显示一行，任务周期为只读字段
+                rawTaskList.forEach((taskItem, tIdx) => {
+                    const pureTask = getPureTaskName(taskItem);
+                    const period = getTaskPeriod(taskItem);
+                    currentLaunchDutyRows.push({
+                        rowKey: `${post.id}_t${tIdx}`,
+                        postId: post.id,
+                        postTitle: post.title,
+                        groupName: post.group_name || '检测组',
+                        taskName: pureTask,
+                        reminderPeriod: period,
+                        persons: personsArray,
+                        personsDisplay: dutyPersonsDisplay,
+                        dailyDutyMap: dailyDutyMap
+                    });
                 });
             });
         }
@@ -13157,19 +13723,15 @@
             html += `
                 <tr style="border-bottom: 1px solid #ebeef5; height: 36px; white-space: nowrap;">
                     <td style="padding: 0 4px; text-align: center; white-space: nowrap;">
-                        <input type="checkbox" class="launch-row-checkbox" value="${row.postId}" onchange="onLaunchRowCheckChange()" style="cursor: pointer; vertical-align: middle;">
+                        <input type="checkbox" class="launch-row-checkbox" value="${row.rowKey}" onchange="onLaunchRowCheckChange()" style="cursor: pointer; vertical-align: middle;">
                     </td>
                     <td style="padding: 0 4px; text-align: center; color: #909399; white-space: nowrap;">${idx + 1}</td>
-                    <td style="padding: 0 10px; text-align: left; font-weight: 600; color: #1D2129; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${row.postTitle}">${row.postTitle}</td>
-                    <td style="padding: 0 8px; text-align: left; color: #606266; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${row.groupName}">${row.groupName}</td>
-                    <td style="padding: 0 8px; text-align: left; color: #606266; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${row.tasks}">${row.tasks}</td>
-                    <td style="padding: 0 8px; text-align: left; color: #303133; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${row.personsDisplay}">${row.personsDisplay}</td>
+                    <td style="padding: 0 10px; text-align: left; font-weight: 600; color: #1D2129; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeRuleHtml(row.postTitle)}">${escapeRuleHtml(row.postTitle)}</td>
+                    <td style="padding: 0 8px; text-align: left; color: #606266; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeRuleHtml(row.groupName)}">${escapeRuleHtml(row.groupName)}</td>
+                    <td style="padding: 0 8px; text-align: left; color: #303133; font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeRuleHtml(row.taskName)}">${escapeRuleHtml(row.taskName)}</td>
+                    <td style="padding: 0 8px; text-align: left; color: #303133; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeRuleHtml(row.personsDisplay)}">${escapeRuleHtml(row.personsDisplay)}</td>
                     <td style="padding: 0 8px; text-align: center; white-space: nowrap;">
-                        <select onchange="onLaunchRowPeriodChange('${row.postId}', this.value)" style="height: 24px; font-size: 12px; border: 1px solid #dcdfe6; border-radius: 3px; padding: 0 4px; color: #303133; background: #ffffff; cursor: pointer; outline: none;">
-                            <option value="每日" ${row.reminderPeriod === '每日' ? 'selected' : ''}>每日</option>
-                            <option value="每周" ${row.reminderPeriod === '每周' ? 'selected' : ''}>每周</option>
-                            <option value="每月" ${row.reminderPeriod === '每月' ? 'selected' : ''}>每月</option>
-                        </select>
+                        <span style="display: inline-block; padding: 2px 8px; border-radius: 3px; background: #f4f4f5; color: #606266; font-size: 12px; border: 1px solid #e9e9eb; user-select: none;">${escapeRuleHtml(row.reminderPeriod)}</span>
                     </td>
                 </tr>
             `;
@@ -13178,13 +13740,6 @@
         tbody.innerHTML = html;
         const checkAll = document.getElementById('launchCheckAll');
         if (checkAll) checkAll.checked = false;
-    }
-
-    function onLaunchRowPeriodChange(postId, newPeriod) {
-        const row = currentLaunchDutyRows.find(r => r.postId === postId);
-        if (row) {
-            row.reminderPeriod = newPeriod;
-        }
     }
 
     function confirmExecuteLaunchTodo() {
@@ -13209,7 +13764,7 @@
             cur.setDate(cur.getDate() + 1);
         }
 
-        // 重新构建【待办任务】列表，根据提醒周期控制生成条数，且责任人关联多个人
+        // 重新构建【待办任务】列表，根据提醒周期控制生成条数，每个单任务单条发起
         const newTodoList = [];
         let todoIdx = 1;
 
@@ -13226,12 +13781,12 @@
                         id: `TD-${String(todoIdx++).padStart(2, '0')}`,
                         post: row.postTitle,
                         group: row.groupName,
-                        task: row.tasks,
+                        task: row.taskName,
                         person: dayPersons,
                         startDate: dStr,
                         endDate: dStr,
                         status: '未开始',
-                        remarks: `【每日待办】${dStr} 岗位履职`
+                        remarks: `【每日待办】${dStr} ${row.taskName}履职`
                     });
                 });
             } else if (period === '每月') {
@@ -13240,12 +13795,12 @@
                     id: `TD-${String(todoIdx++).padStart(2, '0')}`,
                     post: row.postTitle,
                     group: row.groupName,
-                    task: row.tasks,
+                    task: row.taskName,
                     person: row.personsDisplay,
                     startDate: s,
                     endDate: e,
                     status: '未开始',
-                    remarks: `【每月待办】月度岗位综合履职`
+                    remarks: `【每月待办】月度岗位任务履职`
                 });
             } else {
                 // 默认每周：整周生成 1 条待办任务
@@ -13253,7 +13808,7 @@
                     id: `TD-${String(todoIdx++).padStart(2, '0')}`,
                     post: row.postTitle,
                     group: row.groupName,
-                    task: row.tasks,
+                    task: row.taskName,
                     person: row.personsDisplay,
                     startDate: s,
                     endDate: e,
@@ -13274,9 +13829,8 @@
         }
 
         renderTodoTable();
-
         closeLaunchTodoModal();
-        showToast(`✓ 排班待办已确认发起！已生成 ${newTodoList.length} 条待办任务！`);
+        showToast(`✓ 已成功发起 ${newTodoList.length} 条岗位待办任务！`);
 
         // 模拟调用消息模板 TMPL_SCHEDULE_TODO_NOTICE：向消息中心发送通知并增加未读数
         const curUserName = (document.getElementById('currentUserName') || {}).innerText || '李何02';
