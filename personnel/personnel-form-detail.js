@@ -6,6 +6,8 @@
     const stateLabels = { done: '已完成', pending: '进行中', rejected: '已驳回', unstarted: '未发起' };
     const icons = {
         chevron: '<path d="m6 9 6 6 6-6"/>',
+        arrowLeft: '<path d="m14 7-5 5 5 5"/>',
+        arrowRight: '<path d="m9 7 5 5-5 5"/>',
         close: '<path d="m6 6 12 12M6 18 18 6"/>',
         user: '<circle cx="12" cy="8" r="3"/><path d="M6 20v-2a6 6 0 0 1 12 0v2"/>',
         check: '<path d="m5 12 4 4L19 6"/>',
@@ -91,12 +93,12 @@
         const completedCount = list.filter(r => r.status === 'done').length;
         sidebar.innerHTML = `<div class="flow-fixed-header"><span class="pfd-header-title">审批进度</span>
             <div class="pfd-header-actions">
-            <span class="pfd-header-summary" role="status" aria-label="共${list.length}张表单，${completedCount}张审批通过">已完成 <b>${completedCount}/${list.length}</b></span>
+            <span class="pfd-header-summary" role="status" aria-label="共${list.length}张表单，${completedCount}张审批通过">已通过 <b>${completedCount}/${list.length}</b></span>
             ${hasRelated ? '<button type="button" class="pfd-link-button" data-action="link" title="关联已有表单">关联已有表单</button>' : ''}</div></div>
             <div class="flow-fixed-scroll">${list.map((r, i) => `<section class="pfd-section ${expanded.has(r.id) ? '' : 'collapsed'}" data-record="${esc(r.id)}">
                 <div class="pfd-section-heading">
                     <button type="button" class="pfd-heading-toggle" data-action="toggle" aria-controls="pfd-progress-${esc(r.id)}" aria-label="${expanded.has(r.id) ? '收起' : '展开'}${esc(r.title)}审批进度" aria-expanded="${expanded.has(r.id)}" title="${expanded.has(r.id) ? '收起' : '展开'}审批进度">
-                        <span class="pfd-heading-title"><span class="pfd-form-name">${i + 1}. ${esc(r.title)}</span>${tag(r)}</span><span class="pfd-fold">${svg('chevron')}<span>${expanded.has(r.id) ? '收起' : '展开'}</span></span>
+                        <span class="pfd-heading-title"><span class="pfd-form-name">${i + 1}. ${esc(r.title)}</span>${tag(r)}</span><span class="pfd-fold">${svg('chevron')}</span>
                     </button>
                     <span class="pfd-relation ${r.relation === '手动关联' ? 'manual' : ''}">${esc(r.relation)}</span>
                     <div class="pfd-section-actions">
@@ -287,7 +289,7 @@
 
     sidebar.classList.add('pfd-sidebar');
     const collapseButton = drawer.querySelector('.pfd-collapse-button');
-    collapseButton.innerHTML = svg('chevron', 16) + '<span>收起</span>';
+    collapseButton.innerHTML = svg('arrowLeft', 12);
     drawer.querySelector('.drawer-body-split').appendChild(collapseButton);
     const restoreButton = document.createElement('button');
     restoreButton.type = 'button';
@@ -295,7 +297,7 @@
     restoreButton.title = '展开表单详情';
     restoreButton.setAttribute('aria-label', '展开表单详情');
     restoreButton.setAttribute('aria-expanded', 'true');
-    restoreButton.innerHTML = svg('chevron', 16) + '<span>展开</span>';
+    restoreButton.innerHTML = svg('arrowRight', 12);
     drawer.querySelector('.drawer-body-split').prepend(restoreButton);
     restoreButton.addEventListener('click', () => toggleContent(false));
     drawer.querySelectorAll('.drawer-left-scroll-pane table').forEach(table => {
@@ -406,6 +408,7 @@
         open(title, related = true) {
             hasRelated = related;
             if (title) findRecord('main').title = title;
+            drawer.querySelector('#drawer-header-title').title = findRecord('main').title;
             chooseDefault();
             toggleContent(false);
             render();
