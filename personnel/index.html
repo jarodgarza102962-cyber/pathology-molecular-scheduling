@@ -2699,7 +2699,7 @@
                                             <div id="query-archive-tabs-viewport" 
                                                  style="display: flex; overflow-x: hidden; scroll-behavior: smooth; white-space: nowrap; flex: 1; min-width: 0; user-select: none; height: 100%; align-items: center;"
                                                  onscroll="checkQueryTabsScroll()">
-                                                <div id="query-tab-cert" onclick="switchQueryArchiveTab('cert')" style="padding: 0 14px; height: 100%; color: #1e293b; background: #ffffff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); font-weight: 600; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: none;" class="active-tab">资质附件<span style="color: #ef4444; margin-left: 2px; font-weight: 500;">(4)</span></div>
+                                                <div id="query-tab-cert" onclick="switchQueryArchiveTab('cert')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">资质附件<span style="color: #ef4444; margin-left: 2px;">(4)</span></div>
                                                 <div id="query-tab-medical" onclick="switchQueryArchiveTab('medical')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">体检报告<span style="color: #ef4444; margin-left: 2px;">(3)</span></div>
                                                 <div id="query-tab-cme" onclick="switchQueryArchiveTab('cme')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">继续教育<span style="color: #ef4444; margin-left: 2px;">(4)</span></div>
                                                 <div id="query-tab-edu" onclick="switchQueryArchiveTab('edu')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">学习教育经历<span style="color: #ef4444; margin-left: 2px;">(3)</span></div>
@@ -2709,7 +2709,7 @@
                                                 <div id="query-tab-pos" onclick="switchQueryArchiveTab('pos')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">岗位授权<span style="color: #ef4444; margin-left: 2px;">(4)</span></div>
                                                 <div id="query-tab-device" onclick="switchQueryArchiveTab('device')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">设备授权<span style="color: #ef4444; margin-left: 2px;">(4)</span></div>
                                                 <div id="query-tab-study-count" onclick="switchQueryArchiveTab('study-count')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">学习及讲课次数<span style="color: #ef4444; margin-left: 2px;">(6)</span></div>
-                                                <div id="query-tab-research" onclick="switchQueryArchiveTab('research')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: none; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">科研及学术成果<span style="color: #ef4444; margin-left: 2px;">(6)</span></div>
+                                                <div id="query-tab-research" onclick="switchQueryArchiveTab('research')" style="padding: 0 14px; height: 100%; color: #1e293b; background: #ffffff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); font-weight: 600; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: none;" class="active-tab">科研及学术成果<span style="color: #ef4444; margin-left: 2px; font-weight: 500;">(6)</span></div>
                                             </div>
                                             <!-- 右箭头 -->
                                             <div id="query-tabs-nav-next" onclick="scrollQueryArchiveTabs(200)" 
@@ -2724,7 +2724,7 @@
                                         </div>
                                         
                                         <!-- 1. QUERY CERT CONTENT -->
-                                        <div id="query-tab-content-cert" style="padding: 15px; display: block;">
+                                        <div id="query-tab-content-cert" style="padding: 15px; display: none;">
                                             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
                                                 <div style="font-size: 12px; color: #999; display: flex; align-items: center; gap: 12px;">
                                                     <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;background:#e6a23c;display:inline-block;border-radius:2px;"></span>快到期资质</span>
@@ -3337,7 +3337,7 @@
                                         </div>
 
                                         <!-- 11. QUERY RESEARCH & ACADEMIC CONTENT (查询视图只读同步结构化台账) -->
-                                        <div id="query-tab-content-research" style="padding: 15px; display: none;">
+                                        <div id="query-tab-content-research" style="padding: 15px; display: block;">
                                             <div id="query-research-groups"></div>
 
                                             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 12px; color: #64748b;">
@@ -4004,7 +4004,7 @@
                                                  onscroll="checkMaintainTabsScroll()">
                                                 <div id="maintain-tab-cert" onclick="switchMaintainArchiveTab('cert')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">资质附件<span style="color: #ef4444; margin-left: 2px;">(4)</span></div>
                                                 <div id="maintain-tab-medical" onclick="switchMaintainArchiveTab('medical')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">体检报告<span style="color: #ef4444; margin-left: 2px;">(3)</span></div>
-                                                <div id="maintain-tab-cme" onclick="switchMaintainArchiveTab('cme')" style="padding: 0 14px; height: 100%; color: #1e293b; background: #ffffff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); font-weight: 600; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: none;" class="active-tab">继续教育<span style="color: #ef4444; margin-left: 2px; font-weight: 500;">(4)</span></div>
+                                                <div id="maintain-tab-cme" onclick="switchMaintainArchiveTab('cme')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">继续教育<span style="color: #ef4444; margin-left: 2px;">(4)</span></div>
                                                 <div id="maintain-tab-edu" onclick="switchMaintainArchiveTab('edu')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">学习教育经历<span style="color: #ef4444; margin-left: 2px;">(3)</span></div>
                                                 <div id="maintain-tab-work" onclick="switchMaintainArchiveTab('work')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">工作经历<span style="color: #ef4444; margin-left: 2px;">(3)</span></div>
                                                 <div id="maintain-tab-resume" onclick="switchMaintainArchiveTab('resume')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">工作和学习简历及其他材料</div>
@@ -4012,7 +4012,7 @@
                                                 <div id="maintain-tab-pos" onclick="switchMaintainArchiveTab('pos')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">岗位授权<span style="color: #ef4444; margin-left: 2px;">(4)</span></div>
                                                 <div id="maintain-tab-device" onclick="switchMaintainArchiveTab('device')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">设备授权<span style="color: #ef4444; margin-left: 2px;">(4)</span></div>
                                                 <div id="maintain-tab-study-count" onclick="switchMaintainArchiveTab('study-count')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: 1px solid #e2e8f0; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">学习及讲课次数<span style="color: #ef4444; margin-left: 2px;">(6)</span></div>
-                                                <div id="maintain-tab-research" onclick="switchMaintainArchiveTab('research')" style="padding: 0 14px; height: 100%; color: #475569; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: none; transition: color 0.15s;" onmouseover="if(!this.classList.contains('active-tab'))this.style.color='var(--primary)'" onmouseout="if(!this.classList.contains('active-tab'))this.style.color='#475569'">科研及学术成果<span style="color: #ef4444; margin-left: 2px;">(6)</span></div>
+                                                <div id="maintain-tab-research" onclick="switchMaintainArchiveTab('research')" style="padding: 0 14px; height: 100%; color: #1e293b; background: #ffffff; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); font-weight: 600; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; border-right: none;" class="active-tab">科研及学术成果<span style="color: #ef4444; margin-left: 2px; font-weight: 500;">(6)</span></div>
                                             </div>
                                             <!-- 右箭头 -->
                                             <div id="maintain-tabs-nav-next" onclick="scrollMaintainArchiveTabs(200)" 
@@ -4152,7 +4152,7 @@
                                         </div>
 
                                         <!-- 3. CME CONTENT (继续教育 - 双子入口纯净台账) -->
-                                        <div id="maintain-tab-content-cme" style="padding: 15px; display: block;">
+                                        <div id="maintain-tab-content-cme" style="padding: 15px; display: none;">
                                             <!-- 顶部二级子入口切换栏 (参考截图：标签页（次）- 极简下划线文字 Tab) -->
                                             <div style="display: flex; gap: 32px; border-bottom: 1px solid #e2e8f0; margin-bottom: 15px; padding-left: 2px;">
                                                 <button type="button" id="cme-subtab-btn-earn" onclick="switchCmeMaintainSubTab('earn')" 
@@ -4772,7 +4772,7 @@
                                         </div>
 
                                         <!-- 11. RESEARCH & ACADEMIC CONTENT (科研及学术成果 - 固定结构化维护台账) -->
-                                        <div id="maintain-tab-content-research" style="padding: 15px; display: none;">
+                                        <div id="maintain-tab-content-research" style="padding: 15px; display: block;">
                                             <!-- 工具栏：新增 -->
                                             <div style="display: flex; align-items: center; margin-bottom: 12px;">
                                                 <button type="button" class="btn btn-primary" style="padding: 4px 12px; font-size: 12px; height: 28px; display: inline-flex; align-items: center; gap: 4px;" onclick="openResearchEditModal()">
@@ -5332,51 +5332,56 @@
                                                     key: 'project', label: '科研项目', core: true, bg: '#e0f2fe', color: '#0284c7',
                                                     fields: [
                                                         { key: 'title', label: '项目名称', type: 'text', required: true, full: true },
-                                                        { key: 'projectCategory', label: '项目类别', type: 'select', required: false, options: ['国家自然科学基金项目', '省部级科研项目', '市厅级科研项目', '院级科研项目', '横向合作课题'] },
-                                                        { key: 'grantNo', label: '批准号', type: 'text', required: false },
+                                                        { key: 'projectNo', label: '项目编号', type: 'text', required: false },
+                                                        { key: 'fundingOrg', label: '资助机构', type: 'text', required: false },
+                                                        { key: 'projectSource', label: '项目来源', type: 'text', required: false },
                                                         { key: 'startDate', label: '研究开始时间', type: 'cme-month', required: false },
                                                         { key: 'endDate', label: '研究结束时间', type: 'cme-month', required: false },
-                                                        { key: 'funding', label: '经费(万元)', type: 'number', required: false },
-                                                        { key: 'role', label: '承担角色', type: 'select', required: false, options: ['主持', '参与'] },
-                                                        { key: 'status', label: '项目状态', type: 'select', required: false, options: ['在研', '结题'] }
+                                                        { key: 'status', label: '项目状态', type: 'select', required: false, options: ['在研', '结题', '延期', '终止'] },
+                                                        { key: 'role', label: '本人位次', type: 'select', required: false, options: ['主持', '主要参与人', '参与人'] },
+                                                        { key: 'funding', label: '资助经费', type: 'number', required: false, suffix: '万元' }
                                                     ]
                                                 },
                                                 {
                                                     key: 'journal_paper', label: '期刊论文', core: true, bg: '#dbeafe', color: '#1d4ed8',
                                                     fields: [
-                                                        { key: 'title', label: '论文标题', type: 'text', required: true, full: true },
-                                                        { key: 'journal', label: '发表期刊', type: 'text', required: false },
-                                                        { key: 'pubYear', label: '发布时间', type: 'cme-year', required: false },
-                                                        { key: 'selfMark', label: '本人署名标注', type: 'select', required: false, options: ['唯一第一作者', '共同第一作者', '唯一通讯作者', '共同通讯作者', '作者署名按姓氏排序', '其他情况'] },
+                                                        { key: 'title', label: '论文题名', type: 'text', required: true, full: true },
+                                                        { key: 'journal', label: '期刊名称', type: 'text', required: false },
+                                                        { key: 'pubYear', label: '发表时间', type: 'cme-year', required: false },
+                                                        { key: 'issuePage', label: '卷期页码', type: 'text', required: false },
+                                                        { key: 'indexLevel', label: '收录级别', type: 'select', required: false, options: ['SCI/SCIE', 'EI', '中文核心期刊', 'CSCD核心', '普通统计源', '其他'] },
+                                                        { key: 'selfMark', label: '本人署名标注', type: 'select', required: false, options: ['唯一第一作者', '共同第一作者', '唯一通讯作者', '共同通讯作者', '作者署名按姓氏排序', '其他'] },
                                                         { key: 'allAuthors', label: '全部作者', type: 'text', required: false },
-                                                        { key: 'indexLevel', label: '收录级别', type: 'select', required: false, options: ['SCIE', 'SSCI', '北大中文核心', '中国科技核心', '其他'] }
+                                                        { key: 'contribution', label: '本人贡献', type: 'text', required: false }
                                                     ]
                                                 },
                                                 {
                                                     key: 'award', label: '科研奖励', core: true, bg: '#fef3c7', color: '#d97706',
                                                     fields: [
                                                         { key: 'title', label: '名称', type: 'text', required: true, full: true },
-                                                        { key: 'awardCategory', label: '奖励类别', type: 'select', required: false, options: ['科技进步', '自然科学', '技术发明', '教学成果', '其他'] },
-                                                        { key: 'year', label: '获奖时间', type: 'cme-year', required: false },
-                                                        { key: 'selfRankRatio', label: '本人位次', type: 'text', required: false },
                                                         { key: 'issueOrg', label: '授奖机构', type: 'text', required: false },
-                                                        { key: 'allAuthors', label: '全部完成人', type: 'text', required: false }
+                                                        { key: 'awardCategory', label: '奖励类别', type: 'text', required: false },
+                                                        { key: 'allAuthors', label: '全部完成人', type: 'text', required: false },
+                                                        { key: 'year', label: '获奖时间', type: 'cme-year', required: false },
+                                                        { key: 'selfRank', label: '本人位次', type: 'text', required: false }
                                                     ]
                                                 },
                                                 {
                                                     key: 'patent', label: '专利', core: true, bg: '#d1fae5', color: '#059669',
                                                     fields: [
                                                         { key: 'title', label: '专利名称', type: 'text', required: true, full: true },
-                                                        { key: 'patentNo', label: '专利号', type: 'text', required: false },
-                                                        { key: 'authDate', label: '申请时间', type: 'cme-month', required: false }
+                                                        { key: 'patentType', label: '专利类型', type: 'select', required: false, options: ['发明专利', '实用新型专利', '外观设计专利', '国际专利(PCT)', '其他'] },
+                                                        { key: 'patentNo', label: '申请号/专利号', type: 'text', required: false },
+                                                        { key: 'authDate', label: '授权公告时间', type: 'cme-month', required: false },
+                                                        { key: 'role', label: '本人角色', type: 'select', required: false, options: ['第一发明人', '主要发明人', '参与发明人'] }
                                                     ]
                                                 },
                                                 {
                                                     key: 'conf_paper', label: '会议论文', core: false, bg: '#e0e7ff', color: '#4338ca',
                                                     fields: [
-                                                        { key: 'title', label: '论文标题', type: 'text', required: true, full: true },
-                                                        { key: 'confName', label: '会议名称', type: 'text', required: false, full: true },
-                                                        { key: 'pubYear', label: '发表时间', type: 'cme-month', required: false },
+                                                        { key: 'title', label: '论文名称', type: 'text', required: true, full: true },
+                                                        { key: 'confName', label: '会议名称', type: 'text', required: false },
+                                                        { key: 'pubDate', label: '发表时间', type: 'cme-month', required: false },
                                                         { key: 'selfMark', label: '本人署名标注', type: 'text', required: false }
                                                     ]
                                                 },
@@ -5384,43 +5389,48 @@
                                                     key: 'monograph', label: '学术专著', core: false, bg: '#f3e8ff', color: '#7e22ce',
                                                     fields: [
                                                         { key: 'title', label: '专著名称', type: 'text', required: true, full: true },
-                                                        { key: 'publisher', label: '出版社', type: 'text', required: false },
+                                                        { key: 'publisher', label: '出版机构', type: 'text', required: false },
                                                         { key: 'pubDate', label: '出版时间', type: 'cme-month', required: false },
+                                                        { key: 'isbn', label: '书号(ISBN)', type: 'text', required: false },
+                                                        { key: 'allAuthors', label: '全部作者', type: 'text', required: false },
                                                         { key: 'role', label: '本人角色', type: 'text', required: false }
                                                     ]
                                                 },
                                                 {
                                                     key: 'conf_report', label: '会议报告', core: false, bg: '#fce7f3', color: '#be185d',
                                                     fields: [
-                                                        { key: 'title', label: '报告题目', type: 'text', required: true, full: true },
-                                                        { key: 'confName', label: '会议名称', type: 'text', required: false, full: true },
-                                                        { key: 'confLevel', label: '会议级别', type: 'select', required: false, options: ['国际学术会议', '国家级', '省级', '其他'] },
+                                                        { key: 'title', label: '报告名称', type: 'text', required: true, full: true },
+                                                        { key: 'confName', label: '会议名称', type: 'text', required: false },
+                                                        { key: 'reportType', label: '报告类型', type: 'select', required: false, options: ['特邀大会报告', '分会场专题报告', '口头发言', '壁报交流', '其他'] },
                                                         { key: 'confDate', label: '会议时间', type: 'cme-month', required: false }
                                                     ]
                                                 },
                                                 {
                                                     key: 'standard', label: '标准', core: false, bg: '#ccfbf1', color: '#0f766e',
                                                     fields: [
-                                                        { key: 'title', label: '名称', type: 'text', required: true, full: true },
+                                                        { key: 'title', label: '标准名称', type: 'text', required: true, full: true },
                                                         { key: 'stdNo', label: '标准编号', type: 'text', required: false },
-                                                        { key: 'stdLevel', label: '标准级别', type: 'select', required: false, options: ['国际标准', '国家标准', '行业标准', '地方标准', '团体标准', '专家共识'] },
-                                                        { key: 'pubDate', label: '发布时间', type: 'cme-month', required: false }
+                                                        { key: 'stdType', label: '标准类型', type: 'select', required: false, options: ['国际标准', '国家标准', '行业标准', '地方标准', '团体标准', '专家共识/指南'] },
+                                                        { key: 'issueOrg', label: '发布机构', type: 'text', required: false },
+                                                        { key: 'pubDate', label: '发布时间', type: 'cme-month', required: false },
+                                                        { key: 'role', label: '本人角色', type: 'select', required: false, options: ['主要起草人', '起草人', '审核专家', '参与编制'] }
                                                     ]
                                                 },
                                                 {
                                                     key: 'software', label: '软件著作权', core: false, bg: '#ecfeff', color: '#0e7490',
                                                     fields: [
-                                                        { key: 'title', label: '软件全称', type: 'text', required: true, full: true },
-                                                        { key: 'regNo', label: '登记号', type: 'text', required: false },
-                                                        { key: 'regDate', label: '登记批准时间', type: 'cme-month', required: false }
+                                                        { key: 'title', label: '软件名称', type: 'text', required: true, full: true },
+                                                        { key: 'regNo', label: '登记号/批准号', type: 'text', required: false },
+                                                        { key: 'regDate', label: '登记批准时间', type: 'cme-month', required: false },
+                                                        { key: 'role', label: '本人角色', type: 'select', required: false, options: ['独立著作权人', '第一完成人', '主要参与人'] }
                                                     ]
                                                 },
                                                 {
                                                     key: 'talent', label: '人才培养', core: false, bg: '#fef9c3', color: '#a16207',
                                                     fields: [
                                                         { key: 'title', label: '名称', type: 'text', required: true, full: true },
-                                                        { key: 'talentType', label: '人才类型', type: 'select', required: false, options: ['博士研究生培养', '硕士研究生培养', '博士后培养', '规培/进修生带教', '人才计划入选'] },
-                                                        { key: 'role', label: '本人角色', type: 'select', required: false, options: ['第一导师', '合作导师', '入选人', '带教老师'] },
+                                                        { key: 'talentType', label: '人才类型', type: 'select', required: false, options: ['研究生导师', '博士后合作导师', '学科带头人', '青年拔尖人才', '骨干教师', '其他'] },
+                                                        { key: 'role', label: '本人角色', type: 'select', required: false, options: ['导师', '培养对象', '带教教师', '负责人'] },
                                                         { key: 'period', label: '培养周期', type: 'text', required: false }
                                                     ]
                                                 },
@@ -5428,26 +5438,28 @@
                                                     key: 'academic_meeting', label: '举办或参加学术会议', core: false, bg: '#f1f5f9', color: '#334155',
                                                     fields: [
                                                         { key: 'title', label: '会议名称', type: 'text', required: true, full: true },
-                                                        { key: 'joinMode', label: '参与类型', type: 'select', required: false, options: ['主办', '承办', '协办', '参加'] },
-                                                        { key: 'confLevel', label: '会议级别', type: 'select', required: false, options: ['国际学术会议', '国家级', '省级', '市级'] },
-                                                        { key: 'confDate', label: '会议时间', type: 'cme-month', required: false }
+                                                        { key: 'hostOrg', label: '主办/承办机构', type: 'text', required: false },
+                                                        { key: 'confDate', label: '会议时间', type: 'cme-month', required: false },
+                                                        { key: 'joinMode', label: '参与类型', type: 'select', required: false, options: ['大会主席', '执行主席', '学术委员会委员', '主持', '受邀参会', '常规参会'] }
                                                     ]
                                                 },
                                                 {
                                                     key: 'tech_transfer', label: '成果技术转移', core: false, bg: '#ffedd5', color: '#c2410c',
                                                     fields: [
                                                         { key: 'title', label: '成果名称', type: 'text', required: true, full: true },
-                                                        { key: 'transferMode', label: '转化方式', type: 'select', required: false, options: ['技术转让', '专利实施许可', '作价投资', '技术开发', '技术咨询'] },
+                                                        { key: 'assignee', label: '签约或受让单位', type: 'text', required: false },
                                                         { key: 'signDate', label: '签约或转化日期', type: 'cme-month', required: false },
-                                                        { key: 'amount', label: '合同金额(万元)', type: 'number', required: false }
+                                                        { key: 'amount', label: '合同金额', type: 'number', required: false, suffix: '万元' },
+                                                        { key: 'role', label: '本人角色', type: 'select', required: false, options: ['技术成果所有人', '项目负责人', '核心技术骨干', '转化对接人'] }
                                                     ]
                                                 },
                                                 {
                                                     key: 'other_output', label: '其他重要研究成果', core: false, bg: '#f3f4f6', color: '#4b5563',
                                                     fields: [
                                                         { key: 'title', label: '成果名称', type: 'text', required: true, full: true },
-                                                        { key: 'outputForm', label: '成果形式', type: 'select', required: false, options: ['临床指南采纳', '新业务新技术认定', '数据集/生物样本库', '其他重要成果'] },
-                                                        { key: 'pubDate', label: '产出日期', type: 'cme-month', required: false }
+                                                        { key: 'outputForm', label: '成果形式/载体', type: 'text', required: false },
+                                                        { key: 'pubDate', label: '产出时间', type: 'cme-month', required: false },
+                                                        { key: 'role', label: '本人角色', type: 'text', required: false }
                                                     ]
                                                 }
                                             ];
@@ -5462,10 +5474,9 @@
                                                     id: 'RS-01', personCode: 'aa12211221', personName: '李何02', dept: '分子病理室', type: 'project',
                                                     data: {
                                                         title: 'EP300突变经IKKβ调控巨噬细胞极化介导复发/难治大B细胞淋巴瘤阿霉素耐药的作用机制研究',
-                                                        projectCategory: '国家自然科学基金项目',
-                                                        grantNo: '82360037', startDate: '2024-01', endDate: '2027-12',
-                                                        funding: '32', role: '参与', status: '在研',
-                                                        remark: '资助机构/专项：国家自然科学基金委员会 · 地区科学基金项目\n依托/合作单位：病理科分子病理室\n研究内容及进展说明：在研项目，正常推进中'
+                                                        projectNo: '82360037', fundingOrg: '国家自然科学基金委员会', projectSource: '地区科学基金项目',
+                                                        startDate: '2024-01', endDate: '2027-12', funding: '32', role: '参与人', status: '在研',
+                                                        remark: '聚焦淋巴瘤免疫微环境阿霉素耐药机制研究'
                                                     },
                                                     attachments: [{ name: 'NSFC_82360037立项通知书.pdf', size: '1.4 MB', type: 'PDF' }]
                                                 },
@@ -5473,51 +5484,54 @@
                                                     id: 'RS-02', personCode: 'aa12211221', personName: '李何02', dept: '分子病理室', type: 'project',
                                                     data: {
                                                         title: 'PLCE1调控氧化磷酸化抑制食管癌细胞焦亡的作用与分子机制研究',
-                                                        projectCategory: '省部级科研项目',
-                                                        grantNo: '2023TCYCGHX', startDate: '2023-01', endDate: '2025-12',
-                                                        funding: '60', role: '主持', status: '结题',
-                                                        remark: '资助机构/专项：自治区人力资源和社会保障厅 · “天池英才”青年博士项目\n依托/合作单位：病理科分子病理室\n研究内容及进展说明：已按期结题'
+                                                        projectNo: '2023TCYCGHX', fundingOrg: '新疆维吾尔自治区人力资源和社会保障厅', projectSource: '“天池英才”青年博士项目',
+                                                        startDate: '2023-01', endDate: '2025-12', funding: '60', role: '主持', status: '结题',
+                                                        remark: '已按期通过结题验收并完成成果归档'
                                                     },
                                                     attachments: [{ name: '2023TCYCGHX结题批文.pdf', size: '2.1 MB', type: 'PDF' }]
                                                 },
                                                 {
                                                     id: 'RS-05', personCode: 'aa12211221', personName: '李何02', dept: '分子病理室', type: 'journal_paper',
                                                     data: {
-                                                        title: '全外显子组测序揭示食管鳞状细胞癌新型体细胞突变谱及临床预后关联分析',
-                                                        journal: '中华病理学杂志', pubYear: '2025',
-                                                        selfMark: '唯一通讯作者', allAuthors: '王孟博#; 杨丽丽#; 陈海霞#; 吕宏波; 梁丽萍; 马晓梅; 王倩; 李何02*', indexLevel: '北大中文核心',
-                                                        remark: '卷(期):页码：54(4):312-319\n本人贡献：论文设计与审校，项目经费支持，课题管理\n是否代表性论著：是'
+                                                        title: 'Whole exome sequencing identifies novel somatic variants in Xinjiang Kazak esophageal squamous cell carcinoma',
+                                                        journal: 'Pathology Research and Practice', pubYear: '2025', issuePage: '2025, 274(0): 156123',
+                                                        indexLevel: 'SCI/SCIE', selfMark: '唯一通讯作者',
+                                                        allAuthors: 'Wang, Meng-Bo#; Yang, Li-Li#; Chen, Hai-Xia#; Lv, Hong-Bo; Liang, Li-Ping; Ma, Xiao-Mei; Wang, Qian; 李何02*',
+                                                        contribution: '撰写论文，项目资金，项目管理',
+                                                        remark: '第一作者为哈萨克族食管鳞癌基因组学研究专项'
                                                     },
-                                                    attachments: [{ name: '中华病理学杂志_2025_312_全文.pdf', size: '3.2 MB', type: 'PDF' }]
+                                                    attachments: [{ name: 'PRP_2025_156123_全文.pdf', size: '3.2 MB', type: 'PDF' }]
                                                 },
                                                 {
                                                     id: 'RS-06', personCode: 'aa12211221', personName: '李何02', dept: '分子病理室', type: 'journal_paper',
                                                     data: {
-                                                        title: 'miR-193a-3p 靶向调控 TCL1 抑制弥漫大B细胞淋巴瘤增殖侵袭的机制研究',
-                                                        journal: '临床与实验病理学杂志', pubYear: '2025',
-                                                        selfMark: '共同第一作者', allAuthors: '李何02#; 王孟博#; 熊书辰#; 张然; 王灿灿; 张欢; 季文丽; 王翠翠; 贾志英; 李新霞*', indexLevel: '中国科技核心',
-                                                        remark: '卷(期):页码：41(2):156-163\n本人贡献：撰写论文，完成细胞实验及免疫组化验证\n是否代表性论著：是'
+                                                        title: 'miR-193a-3p prevents tumour progression by targeting TCL1 in diffuse large B-cell lymphoma',
+                                                        journal: 'Journal of Translational Medicine', pubYear: '2025', issuePage: '2025, 23(1): 807',
+                                                        indexLevel: 'SCI/SCIE', selfMark: '共同第一作者',
+                                                        allAuthors: '李何02#; Wang, Mengbo#; Xiong, Shuchen#; Zhang, Ran; Wang, Cancan; Zhang, Huan; Ji, Wenli; Wang, Cuicui; Jia, Zhiying; Li, Xinxia*',
+                                                        contribution: '撰写论文，完成细胞实验',
+                                                        remark: '重点聚焦 TCL1 靶向通路及功能细胞实验验证'
                                                     },
-                                                    attachments: [{ name: '临床与实验病理学杂志_2025_156_检索报告.pdf', size: '1.8 MB', type: 'PDF' }]
+                                                    attachments: [{ name: 'JTM_2025_807_全文.pdf', size: '1.8 MB', type: 'PDF' }]
                                                 },
                                                 {
                                                     id: 'RS-07', personCode: 'aa12211221', personName: '李何02', dept: '分子病理室', type: 'award',
                                                     data: {
                                                         title: '弥漫大B细胞淋巴瘤肿瘤微环境中耐药相关分子机制研究',
-                                                        awardCategory: '科技进步',
-                                                        year: '2022', selfRankRatio: '3/7',
-                                                        issueOrg: '新疆维吾尔自治区人民政府',
+                                                        issueOrg: '新疆维吾尔自治区人民政府', awardCategory: '科技进步',
                                                         allAuthors: '李新霞; 马志萍; 李何02; 闫淑芳; 马佳佳; 杨美虹; 杨柳青',
-                                                        remark: '自治区科技进步二等奖，重点聚焦淋巴瘤免疫化疗耐药'
+                                                        year: '2022', selfRank: '3/7',
+                                                        remark: '自治区科技进步二等奖'
                                                     },
-                                                    attachments: [{ name: '自治区科技进步二等奖证书.jpg', size: '1.1 MB', type: 'IMG' }]
+                                                    attachments: [{ name: '自治区科技进步奖证书.jpg', size: '1.1 MB', type: 'IMG' }]
                                                 },
                                                 {
                                                     id: 'RS-08', personCode: 'aa12211221', personName: '李何02', dept: '分子病理室', type: 'patent',
                                                     data: {
                                                         title: '一种肿瘤液体活检装置',
-                                                        patentNo: 'ZL 2023 2 0811203.3', authDate: '2023-07-28',
-                                                        remark: '全部发明人：李何02; 王孟博; 李新霞\n国别/地区：中国'
+                                                        patentType: '实用新型专利', patentNo: 'ZL 2023 2 0811203.3', authDate: '2023-07',
+                                                        role: '第一发明人',
+                                                        remark: '已获国家知识产权局授权公告'
                                                     },
                                                     attachments: [{ name: '专利授权证书_ZL202320811203.3.pdf', size: '0.8 MB', type: 'PDF' }]
                                                 },
@@ -5525,8 +5539,9 @@
                                                     id: 'RS-09', personCode: 'aa12211221', personName: '李何02', dept: '分子病理室', type: 'standard',
                                                     data: {
                                                         title: '食管癌分子病理液态活检检测操作专家共识（2025版）',
-                                                        stdNo: 'BL-CS-2025-02', stdLevel: '专家共识', pubDate: '2025-05-18',
-                                                        remark: '发布机构：省病理质控中心\n本人位次：第1起草人'
+                                                        stdNo: 'BL-CS-2025-02', stdType: '专家共识/指南', issueOrg: '省病理质控中心',
+                                                        pubDate: '2025-05', role: '主要起草人',
+                                                        remark: '质控中心组织全省病理专家研讨发布'
                                                     },
                                                     attachments: [{ name: '专家共识发布文本首页.pdf', size: '1.5 MB', type: 'PDF' }]
                                                 }
@@ -5538,8 +5553,8 @@
                                                     id: 'RS-D02', personCode: '112', personName: '李何01', dept: '免疫组化组', type: 'project',
                                                     data: {
                                                         title: '空间转录组解析三阴性乳腺癌免疫微环境异质性机制',
-                                                        projectCategory: '国家自然科学基金项目', grantNo: '82402911', startDate: '2025-01', endDate: '2027-12',
-                                                        funding: '30', role: '主持', status: '在研',
+                                                        projectNo: '82402911', fundingOrg: '国家自然科学基金委员会', projectSource: '青年科学基金项目',
+                                                        startDate: '2025-01', endDate: '2027-12', funding: '30', role: '主持', status: '在研',
                                                         remark: '资助机构/专项：国家自然科学基金委 · 青年科学基金项目'
                                                     },
                                                     attachments: [{ name: '青年基金批文.pdf', size: '1.2 MB', type: 'PDF' }]
@@ -5548,8 +5563,10 @@
                                                     id: 'RS-D04', personCode: '12345678', personName: '李何03', dept: '常规诊断组', type: 'journal_paper',
                                                     data: {
                                                         title: '人工智能辅助胃腺癌数字病理切片分级与质控应用研究',
-                                                        journal: '诊断病理学杂志', pubYear: '2025', selfMark: '唯一通讯作者', allAuthors: '李何03*; 张磊', indexLevel: '中国科技核心',
-                                                        remark: '卷(期):页码：32(3):204-209\n本人贡献：课题设计与通讯审校\n是否代表性论著：是'
+                                                        journal: '诊断病理学杂志', pubYear: '2025', issuePage: '2025, 32(3): 204-209',
+                                                        selfMark: '唯一通讯作者', allAuthors: '李何03*; 张磊', indexLevel: '中文核心期刊',
+                                                        contribution: '课题设计与通讯审校',
+                                                        remark: '临床切片AI识别敏感度达98.2%'
                                                     },
                                                     attachments: [{ name: '诊断病理学杂志_2025_204_全文.pdf', size: '2.4 MB', type: 'PDF' }]
                                                 },
@@ -5557,8 +5574,9 @@
                                                     id: 'RS-D05', personCode: '12345678', personName: '李何03', dept: '常规诊断组', type: 'patent',
                                                     data: {
                                                         title: '一种数字切片智能质控扫描托盘',
-                                                        patentNo: 'ZL 2024 1 0321988.2', authDate: '2025-04-10',
-                                                        remark: '全部发明人：李何03; 王芳\n国别/地区：中国'
+                                                        patentType: '发明专利', patentNo: 'ZL 2024 1 0321988.2', authDate: '2025-04',
+                                                        role: '第一发明人',
+                                                        remark: '全部发明人：李何03; 王芳'
                                                     },
                                                     attachments: [{ name: '发明专利证书.pdf', size: '1.0 MB', type: 'PDF' }]
                                                 }
@@ -5580,49 +5598,49 @@
                                                     case 'project':
                                                         return {
                                                             title: d.title || '-',
-                                                            carrier: [d.projectCategory, d.grantNo ? `(${d.grantNo})` : ''].filter(Boolean).join(' · ') || '-',
+                                                            carrier: [d.fundingOrg, d.projectSource, d.projectNo ? `(${d.projectNo})` : ''].filter(Boolean).join(' · ') || '-',
                                                             metric: [d.role, d.funding ? d.funding + '万元' : '', d.status].filter(Boolean).join(' · ') || '-',
-                                                            dateText: (d.startDate || d.endDate) ? `${d.startDate || ''} 至 ${d.endDate || ''}` : (d.period || '-')
+                                                            dateText: (d.startDate || d.endDate) ? `${d.startDate || ''} 至 ${d.endDate || ''}` : '-'
                                                         };
                                                     case 'journal_paper':
                                                         return {
                                                             title: d.title || '-',
-                                                            carrier: [d.journal, d.pubYear].filter(Boolean).join(', ') || '-',
+                                                            carrier: [d.journal, d.pubYear, d.issuePage].filter(Boolean).join(', ') || '-',
                                                             metric: [d.selfMark, d.indexLevel].filter(Boolean).join(' · ') || '-',
                                                             dateText: d.pubYear || '-'
                                                         };
                                                     case 'award':
                                                         return {
                                                             title: d.title || '-',
-                                                            carrier: [d.awardCategory, d.issueOrg].filter(Boolean).join(' · ') || '-',
-                                                            metric: d.selfRankRatio ? `位次 ${d.selfRankRatio}` : '-',
+                                                            carrier: [d.issueOrg, d.awardCategory].filter(Boolean).join(' · ') || '-',
+                                                            metric: d.selfRank ? `位次 ${d.selfRank}` : '-',
                                                             dateText: d.year || '-'
                                                         };
                                                     case 'patent':
                                                         return {
                                                             title: d.title || '-',
-                                                            carrier: d.patentNo || '-',
-                                                            metric: '专利',
+                                                            carrier: [d.patentType, d.patentNo ? `(${d.patentNo})` : ''].filter(Boolean).join(' · ') || '-',
+                                                            metric: d.role || '专利',
                                                             dateText: d.authDate || '-'
                                                         };
                                                     case 'conf_paper':
-                                                        return { title: d.title || '-', carrier: d.confName || '-', metric: d.selfMark || '-', dateText: d.pubYear || d.confDate || '-' };
+                                                        return { title: d.title || '-', carrier: d.confName || '-', metric: d.selfMark || '-', dateText: d.pubDate || '-' };
                                                     case 'monograph':
-                                                        return { title: d.title || '-', carrier: d.publisher || '-', metric: d.role || '-', dateText: d.pubDate || '-' };
+                                                        return { title: d.title || '-', carrier: [d.publisher, d.isbn ? `ISBN: ${d.isbn}` : ''].filter(Boolean).join(' · ') || '-', metric: d.role || '-', dateText: d.pubDate || '-' };
                                                     case 'conf_report':
-                                                        return { title: d.title || '-', carrier: [d.confName, d.confLevel].filter(Boolean).join(' · ') || '-', metric: '-', dateText: d.confDate || '-' };
+                                                        return { title: d.title || '-', carrier: [d.confName, d.reportType].filter(Boolean).join(' · ') || '-', metric: d.reportType || '-', dateText: d.confDate || '-' };
                                                     case 'standard':
-                                                        return { title: d.title || '-', carrier: d.stdNo || '-', metric: d.stdLevel || '-', dateText: d.pubDate || '-' };
+                                                        return { title: d.title || '-', carrier: [d.stdNo, d.stdType].filter(Boolean).join(' · ') || '-', metric: d.role || '-', dateText: d.pubDate || '-' };
                                                     case 'software':
-                                                        return { title: d.title || '-', carrier: d.regNo ? `登记号: ${d.regNo}` : '-', metric: '-', dateText: d.regDate || '-' };
+                                                        return { title: d.title || '-', carrier: d.regNo ? `登记号: ${d.regNo}` : '-', metric: d.role || '-', dateText: d.regDate || '-' };
                                                     case 'talent':
                                                         return { title: d.title || '-', carrier: d.talentType || '-', metric: d.role || '-', dateText: d.period || '-' };
                                                     case 'academic_meeting':
-                                                        return { title: d.title || '-', carrier: d.confLevel || '-', metric: d.joinMode || '-', dateText: d.confDate || '-' };
+                                                        return { title: d.title || '-', carrier: d.hostOrg || '-', metric: d.joinMode || '-', dateText: d.confDate || '-' };
                                                     case 'tech_transfer':
-                                                        return { title: d.title || '-', carrier: d.transferMode || '-', metric: d.amount ? d.amount + '万元' : '-', dateText: d.signDate || '-' };
+                                                        return { title: d.title || '-', carrier: d.assignee || '-', metric: d.amount ? d.amount + '万元' : (d.role || '-'), dateText: d.signDate || '-' };
                                                     default:
-                                                        return { title: d.title || '-', carrier: d.outputForm || '-', metric: '-', dateText: d.pubDate || '-' };
+                                                        return { title: d.title || '-', carrier: d.outputForm || '-', metric: d.role || '-', dateText: d.pubDate || '-' };
                                                 }
                                             }
 
@@ -5645,11 +5663,11 @@
                                                     if (rawVal === undefined || rawVal === null || String(rawVal).trim() === '') return;
 
                                                     let displayVal = String(rawVal).trim();
-                                                    if ((f.key === 'funding' || f.key === 'amount') && !displayVal.includes('万')) {
-                                                        displayVal += '万元';
+                                                    if (f.suffix && !displayVal.endsWith(f.suffix)) {
+                                                        displayVal += f.suffix;
                                                     }
 
-                                                    const isLong = (f.key === 'authors' || f.key === 'members' || displayVal.length > 25);
+                                                    const isLong = (f.key === 'allAuthors' || displayVal.length > 25);
                                                     const longCls = isLong ? ' is-long' : '';
 
                                                     items.push('<span class="rs-meta-item' + longCls + '"><span class="rs-meta-label">' + rsEsc(f.label) + ':</span><span class="rs-meta-val">' + rsEsc(displayVal) + '</span></span>');
@@ -5774,6 +5792,14 @@
                                                         return `<div style="${spanStyle} display: flex; align-items: center; min-width: 0;">
                                                             <span style="width: 118px; text-align: right; margin-right: 12px; color: #606266; flex-shrink: 0;">${reqHtml}${rsEsc(f.label)}</span>
                                                             <input type="text" id="rs-field-${f.key}" class="cme-modal-input" value="${rsEsc(val)}" readonly style="flex: 1; min-width: 0; cursor: pointer; background: #fff;" onclick="openCmeYearPicker(this)">
+                                                        </div>`;
+                                                    } else if (f.suffix) {
+                                                        return `<div style="${spanStyle} display: flex; align-items: center; min-width: 0;">
+                                                            <span style="width: 118px; text-align: right; margin-right: 12px; color: #606266; flex-shrink: 0;">${reqHtml}${rsEsc(f.label)}</span>
+                                                            <div style="flex: 1; display: flex; align-items: center; min-width: 0;">
+                                                                <input type="${f.type || 'text'}" id="rs-field-${f.key}" class="cme-modal-input" value="${rsEsc(val)}" style="flex: 1; min-width: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                                                                <span style="height: 32px; line-height: 30px; padding: 0 10px; background: #f8fafc; border: 1px solid #dcdfe6; border-left: none; border-top-right-radius: 4px; border-bottom-right-radius: 4px; color: #606266; font-size: 12px; flex-shrink: 0;">${rsEsc(f.suffix)}</span>
+                                                            </div>
                                                         </div>`;
                                                     } else {
                                                         return `<div style="${spanStyle} display: flex; align-items: center; min-width: 0;">
@@ -5935,6 +5961,9 @@
                                                         const spanStyle = f.full ? 'grid-column: 1 / -1;' : '';
                                                         let val = rec.data[f.key];
                                                         if (f.type === 'checkbox') val = val ? '是' : '否';
+                                                        else if (f.suffix && val !== undefined && val !== null && String(val).trim() !== '') {
+                                                            val = String(val).endsWith(f.suffix) ? val : (val + ' ' + f.suffix);
+                                                        }
                                                         html += `<div style="${spanStyle} display:flex; align-items:center; min-width:0;">
                                                             <span style="width:118px; text-align:right; margin-right:12px; color:#606266; flex-shrink:0;">${rsEsc(f.label)}</span>
                                                             <input type="text" class="cme-readonly-input" value="${rsEsc(val || '')}" readonly disabled style="flex:1; min-width:0;">
@@ -12794,6 +12823,10 @@ graph LR
                 if (typeof selectQueryPerson === 'function') selectQueryPerson('aa12211221');
                 if (typeof switchQueryArchiveTab === 'function') switchQueryArchiveTab('research');
                 if (typeof renderResearchTables === 'function') renderResearchTables();
+                const mTab = document.getElementById('maintain-tab-research');
+                if (mTab) { try { mTab.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' }); } catch(e){} }
+                const qTab = document.getElementById('query-tab-research');
+                if (qTab) { try { qTab.scrollIntoView({ behavior: 'auto', block: 'nearest', inline: 'center' }); } catch(e){} }
             }, 100);
         }, 50);
     });
