@@ -6860,7 +6860,7 @@
 /* ==========================================================================
    排班工作台界面全新视觉规范 (遵循 UI Style Integrity Guard 与参考规范)
    ========================================================================== */
-#viewScheduleBoard {
+#viewScheduleBoard:not(.view-hidden) {
     height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
@@ -6868,6 +6868,16 @@
     background: #f0f2f5 !important;
     padding: 10px 14px 8px !important;
     box-sizing: border-box !important;
+}
+
+#viewScheduleBoard.view-hidden,
+#viewScheduleTodo.view-hidden {
+    display: none !important;
+}
+
+#viewScheduleBoard.view-active,
+#viewScheduleTodo.view-active {
+    display: flex !important;
 }
 
 #viewScheduleBoard .card-matrix-wrap {
@@ -8274,19 +8284,19 @@
 
         <!-- ================= 弹窗：检测项目选择弹窗 (ruleProjectPickerModal) ================= -->
     <div class="modal-overlay" id="ruleProjectPickerModal" onclick="closeRuleProjectPicker(event)" style="display:none;z-index:2300;">
-        <div class="selector-modal-card" onclick="event.stopPropagation()" style="width:680px; max-width:94vw; border-radius:4px; box-shadow:0 6px 24px rgba(0,0,0,0.2); overflow:hidden;">
+        <div class="selector-modal-card" onclick="event.stopPropagation()" style="width:720px; max-width:94vw; border-radius:4px; box-shadow:0 6px 24px rgba(0,0,0,0.2); overflow:hidden;">
             <!-- 标题居中，右侧关闭按钮绝对定位 -->
             <div class="selector-modal-header" style="height:46px; position:relative; display:flex; align-items:center; justify-content:center; padding:0 18px; border-bottom:1px solid #ebeef5; background:#fafbfc;">
                 <strong style="font-size:15px; font-weight:600; color:#303133; text-align:center;">关联检测项目选择</strong>
                 <button type="button" class="selector-modal-close" onclick="closeRuleProjectPicker()" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); border:0; background:transparent; font-size:20px; color:#909399; cursor:pointer; line-height:1;">×</button>
             </div>
             
-            <!-- 左右双栏：左侧【检测项目】，右侧【已选】 -->
-            <div class="selector-modal-body" style="height:320px; display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:14px 18px 10px 18px;">
-                <!-- 左侧可选区域 -->
+            <!-- 左右双栏：左侧【检测项目二级树】，右侧【已选】 -->
+            <div class="selector-modal-body" style="height:340px; display:grid; grid-template-columns:1.2fr 1fr; gap:12px; padding:14px 18px 10px 18px;">
+                <!-- 左侧可选区域 (二级树组织) -->
                 <div class="selector-pane" style="border:1px solid #ebeef5; border-radius:4px; display:flex; flex-direction:column; overflow:hidden;">
                     <div class="selector-pane-title" style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #ebeef5; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600;">
-                        <span style="color:#303133;">检测项目</span>
+                        <span style="color:#303133;">科室检测项目（二级分类）</span>
                         <span id="ruleProjectPickerCount" style="color:#008fd5; font-weight:normal;">已选 0 项</span>
                     </div>
                     <div style="padding:6px 10px; border-bottom:1px solid #f0f2f5;">
@@ -8298,14 +8308,12 @@
                 <!-- 右侧已选区域 -->
                 <div class="selector-pane" style="border:1px solid #ebeef5; border-radius:4px; display:flex; flex-direction:column; overflow:hidden;">
                     <div class="selector-pane-title" style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #ebeef5; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600;">
-                        <span style="color:#303133;">已选</span>
+                        <span style="color:#303133;">已选项目</span>
                         <button type="button" style="font-size:12px; color:#f56c6c; border:0; background:transparent; cursor:pointer;" onclick="clearRuleProjectPicker()">清空全部</button>
                     </div>
                     <div class="selected-task-scroll" id="ruleProjectPickerSelected" style="flex:1; overflow-y:auto; padding:8px 12px;"></div>
                 </div>
             </div>
-
-            
 
             <!-- 弹窗下方的操作区：取消、确定 -->
             <div class="selector-modal-footer" style="height:48px; border-top:1px solid #ebeef5; padding:0 18px; display:flex; align-items:center; justify-content:flex-end; gap:10px; background:#ffffff;">
@@ -8317,38 +8325,54 @@
 
     <!-- ================= 弹窗：任务明细选择弹窗 (ruleTaskPickerModal) ================= -->
     <div class="modal-overlay" id="ruleTaskPickerModal" onclick="closeRuleTaskPicker(event)" style="display:none;z-index:2300;">
-        <div class="selector-modal-card" onclick="event.stopPropagation()" style="width:680px; max-width:94vw; border-radius:4px; box-shadow:0 6px 24px rgba(0,0,0,0.2); overflow:hidden;">
+        <div class="selector-modal-card" onclick="event.stopPropagation()" style="width:740px; max-width:94vw; border-radius:4px; box-shadow:0 6px 24px rgba(0,0,0,0.2); overflow:hidden;">
             <!-- 标题居中，右侧关闭按钮绝对定位 -->
             <div class="selector-modal-header" style="height:46px; position:relative; display:flex; align-items:center; justify-content:center; padding:0 18px; border-bottom:1px solid #ebeef5; background:#fafbfc;">
                 <strong style="font-size:15px; font-weight:600; color:#303133; text-align:center;">岗位任务明细选择</strong>
                 <button type="button" class="selector-modal-close" onclick="closeRuleTaskPicker()" style="position:absolute; right:16px; top:50%; transform:translateY(-50%); border:0; background:transparent; font-size:20px; color:#909399; cursor:pointer; line-height:1;">×</button>
             </div>
 
-            <!-- 左右双栏：左侧【任务列表】，右侧【已选】 -->
-            <div class="selector-modal-body" style="height:320px; display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:14px 18px 10px 18px;">
-                <!-- 左侧可选区域 -->
+            <!-- 左右双栏：左侧【两列任务列表】，右侧【已选】 -->
+            <div class="selector-modal-body" style="height:320px; display:grid; grid-template-columns:1.3fr 1fr; gap:12px; padding:14px 18px 8px 18px;">
+                <!-- 左侧可选区域 (两列表格树形态：第1列任务名称，第2列任务周期) -->
                 <div class="selector-pane" style="border:1px solid #ebeef5; border-radius:4px; display:flex; flex-direction:column; overflow:hidden;">
                     <div class="selector-pane-title" style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #ebeef5; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600;">
-                        <span style="color:#303133;">任务列表</span>
-                        <span id="ruleTaskPickerCount" style="color:#67c23a; font-weight:normal;">已选 0 项</span>
+                        <span style="color:#303133;">可选任务库</span>
+                        <span id="ruleTaskPickerCount" style="color:#008fd5; font-weight:normal;">已选 0 项</span>
                     </div>
                     <div style="padding:6px 10px; border-bottom:1px solid #f0f2f5;">
                         <input class="selector-search" id="ruleTaskPickerSearch" placeholder="搜索任务名称..." oninput="renderRuleTaskPicker(this.value)" style="width:100%; height:28px; border:1px solid #dcdfe6; border-radius:3px; padding:0 8px; font-size:12px; box-sizing:border-box;">
                     </div>
-                    <div class="task-tree-scroll" id="ruleTaskPickerOptions" style="flex:1; overflow-y:auto; padding:8px 12px;"></div>
+                    <!-- 两列表头 -->
+                    <div style="display:flex; align-items:center; height:28px; background:#f5f7fa; border-bottom:1px solid #ebeef5; padding:0 12px; font-size:12px; font-weight:600; color:#606266;">
+                        <span style="flex:1;">任务名称</span>
+                        <span style="width:70px; text-align:center;">任务周期</span>
+                    </div>
+                    <div class="task-tree-scroll" id="ruleTaskPickerOptions" style="flex:1; overflow-y:auto; padding:6px 12px;"></div>
                 </div>
 
                 <!-- 右侧已选区域 -->
                 <div class="selector-pane" style="border:1px solid #ebeef5; border-radius:4px; display:flex; flex-direction:column; overflow:hidden;">
                     <div class="selector-pane-title" style="padding:8px 12px; background:#f8fafc; border-bottom:1px solid #ebeef5; display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:600;">
-                        <span style="color:#303133;">已选</span>
+                        <span style="color:#303133;">已选任务清单</span>
                         <button type="button" style="font-size:12px; color:#f56c6c; border:0; background:transparent; cursor:pointer;" onclick="clearRuleTaskPicker()">清空全部</button>
                     </div>
                     <div class="selected-task-scroll" id="ruleTaskPickerSelected" style="flex:1; overflow-y:auto; padding:8px 12px;"></div>
                 </div>
             </div>
 
-            
+            <!-- 弹窗下方：自定义新增文本框 + 【任务周期】下拉选择（每日/每周/每月）+ 【添加】按钮 -->
+            <div class="custom-add-task-bar" style="padding:8px 18px; border-top:1px solid #ebeef5; background:#fafbfc; display:flex; align-items:center; gap:8px; font-size:12px;">
+                <span style="color:#606266; font-weight:500; white-space:nowrap;">自定义新增：</span>
+                <input type="text" id="customTaskInput" placeholder="输入自定义任务名称" style="flex:1; height:28px; border:1px solid #dcdfe6; border-radius:3px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box;">
+                <span style="color:#606266; font-weight:500; white-space:nowrap;">任务周期：</span>
+                <select id="customTaskPeriod" style="height:28px; border:1px solid #dcdfe6; border-radius:3px; padding:0 8px; font-size:12px; color:#303133; outline:none; background:#ffffff;">
+                    <option value="每日">每日</option>
+                    <option value="每周">每周</option>
+                    <option value="每月">每月</option>
+                </select>
+                <button type="button" class="btn btn-default" onclick="addCustomTaskItem()" style="height:28px; padding:0 14px; border:1px solid #008fd5; color:#008fd5; background:#f0f7ff; border-radius:3px; cursor:pointer; font-weight:500; white-space:nowrap;">+ 添加</button>
+            </div>
 
             <!-- 弹窗下方的操作区：取消、确定 -->
             <div class="selector-modal-footer" style="height:48px; border-top:1px solid #ebeef5; padding:0 18px; display:flex; align-items:center; justify-content:flex-end; gap:10px; background:#ffffff;">
@@ -8740,36 +8764,36 @@
 
             <!-- 2. 弹窗主内容区 -->
             <div style="flex: 1; overflow-y: auto; padding: 18px 24px; display: flex; flex-direction: column; background: #ffffff;">
-                <!-- 2.1 表单字段横向并排布局：开始时间、结束时间去掉icon，平齐规整 -->
+                <!-- 2.1 表单字段横向并排布局：开始时间、结束时间（变更时实时联动刷新下方任务明细列表） -->
                 <div class="batch-form-row" style="margin-bottom: 14px; display: flex; align-items: center; gap: 24px;">
                     <div class="batch-form-item" style="display: flex; align-items: center; gap: 8px;">
                         <span class="batch-required-star" style="color: #F34B4B; margin-right: 2px;">*</span>
                         <label class="batch-form-label" style="font-size: 13px; color: #303133; font-weight: 500;">开始时间</label>
                         <div class="batch-date-input-box" style="height: 30px;">
-                            <input type="date" id="launchStartDate" style="width: 200px; height: 30px; padding: 0 10px; border: 1px solid #dcdfe6; border-radius: 3px; font-size: 12px; color: #303133; outline: none; box-sizing: border-box;" value="2026-11-02" placeholder="选择日期">
+                            <input type="date" id="launchStartDate" style="width: 200px; height: 30px; padding: 0 10px; border: 1px solid #dcdfe6; border-radius: 3px; font-size: 12px; color: #303133; outline: none; box-sizing: border-box;" value="2026-11-02" placeholder="选择日期" onchange="renderLaunchPostVerifyTable(false)">
                         </div>
                     </div>
                     <div class="batch-form-item" style="display: flex; align-items: center; gap: 8px;">
                         <span class="batch-required-star" style="color: #F34B4B; margin-right: 2px;">*</span>
                         <label class="batch-form-label" style="font-size: 13px; color: #303133; font-weight: 500;">结束时间</label>
                         <div class="batch-date-input-box" style="height: 30px;">
-                            <input type="date" id="launchEndDate" style="width: 200px; height: 30px; padding: 0 10px; border: 1px solid #dcdfe6; border-radius: 3px; font-size: 12px; color: #303133; outline: none; box-sizing: border-box;" value="2026-11-08" placeholder="选择日期">
+                            <input type="date" id="launchEndDate" style="width: 200px; height: 30px; padding: 0 10px; border: 1px solid #dcdfe6; border-radius: 3px; font-size: 12px; color: #303133; outline: none; box-sizing: border-box;" value="2026-11-08" placeholder="选择日期" onchange="renderLaunchPostVerifyTable(false)">
                         </div>
                     </div>
                 </div>
 
-                <!-- 2.2 明细表工具栏 (右侧并排提供刷新和删除按钮，仅线框加文字) -->
+                <!-- 2.2 明细表工具栏 (右侧并排提供刷新和移除按钮，仅线框加文字) -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; margin-top: 4px;">
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="font-weight: 700; font-size: 14px; color: #1D2129;">任务明细</span>
+                        <span style="font-weight: 700; font-size: 14px; color: #1D2129;">任务明细表</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <button type="button" class="btn btn-default" style="height: 28px; padding: 0 12px; font-size: 12px; border: 1px solid #DCDFE6; background: #fff; color: #606266; border-radius: 3px; cursor: pointer;" onclick="refreshLaunchPostVerifyTable()">刷新</button>
-                        <button type="button" class="btn btn-default" style="height: 28px; padding: 0 12px; font-size: 12px; border: 1px solid #DCDFE6; background: #fff; color: #606266; border-radius: 3px; cursor: pointer;" onclick="deleteSelectedLaunchDutyRows()">删除</button>
+                        <button type="button" class="btn btn-default" style="height: 28px; padding: 0 14px; font-size: 12px; border: 1px solid #DCDFE6; background: #fff; color: #606266; border-radius: 3px; cursor: pointer;" onclick="refreshLaunchPostVerifyTable()">刷新</button>
+                        <button type="button" class="btn btn-default" style="height: 28px; padding: 0 14px; font-size: 12px; border: 1px solid #DCDFE6; background: #fff; color: #606266; border-radius: 3px; cursor: pointer;" onclick="removeSelectedLaunchDutyRows()">移除</button>
                     </div>
                 </div>
 
-                <!-- 2.3 下方明细表 (完整展示，不设局部滚动，列包含：[复选框]、序号、岗位名称、所属专业组/大类、任务明细、在岗责任人、提醒周期) -->
+                <!-- 2.3 下方明细表 (序号、岗位名称、所属专业组、任务名称、任务周期、在岗责任人) -->
                 <div style="border: 1px solid #ebeef5; border-radius: 4px; background: #ffffff;">
                     <table class="exact-detail-table" style="width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed;">
                         <thead>
@@ -8777,16 +8801,16 @@
                                 <th style="width: 36px; text-align: center; white-space: nowrap;">
                                     <input type="checkbox" id="launchCheckAll" onchange="toggleLaunchCheckAll(this.checked)" style="cursor: pointer; vertical-align: middle;">
                                 </th>
-                                <th style="width: 45px; text-align: center; white-space: nowrap;">序号</th>
+                                <th style="width: 50px; text-align: center; white-space: nowrap;">序号</th>
                                 <th style="width: 140px; text-align: left; padding-left: 10px; white-space: nowrap;">岗位名称</th>
-                                <th style="width: 110px; text-align: left; padding-left: 8px; white-space: nowrap;">所属专业组/大类</th>
-                                <th style="text-align: left; padding-left: 8px; white-space: nowrap;">任务明细</th>
-                                <th style="width: 130px; text-align: left; padding-left: 8px; white-space: nowrap;">在岗责任人</th>
-                                <th style="width: 95px; text-align: center; white-space: nowrap;">提醒周期</th>
+                                <th style="width: 120px; text-align: left; padding-left: 8px; white-space: nowrap;">所属专业组</th>
+                                <th style="min-width: 200px; text-align: left; padding-left: 8px; white-space: nowrap;">任务名称</th>
+                                <th style="width: 90px; text-align: center; white-space: nowrap;">任务周期</th>
+                                <th style="width: 150px; text-align: left; padding-left: 8px; white-space: nowrap;">在岗责任人</th>
                             </tr>
                         </thead>
                         <tbody id="launchPostVerifyTbody">
-                            <!-- 由 JS 根据选定时间段动态渲染已排班岗位的明细 -->
+                            <!-- 由 JS 根据选定时间段动态渲染已排班岗位的单任务单行明细 -->
                         </tbody>
                     </table>
                 </div>
@@ -11360,30 +11384,81 @@
             '郑科', '陈捷', '孙林', '陈容', '陈昌', '卫燕', '岳妮', '邹晴', '袁阳', '严嘉', '彭然'
         ];
 
-        // 3. 项目与任务标准字典（严格对齐用户提供的业务清单）
+        // 3. 项目标准二级树字典（大类分类 -> 叶子项目）
+        const ruleProjectTreeCatalog = [
+            {
+                category: '分子病理',
+                children: [
+                    'PCR检测', '荧光原位杂交(FISH)', 'Sanger测序', 'NGS高通量测序',
+                    '肺11', '肠四联', 'BRAF', 'WT1-PCR',
+                    '结核分枝杆菌核酸', '15种融合基因', 'TERT启动子突变',
+                    'POLE突变', 'BCR/TCR重排', 'MSI微卫星不稳定', 'PDGFRA/KIT双基因',
+                    'WT1-FISH', '骨髓融合基因', 'HER2扩增', 'ALK/ROS1断裂',
+                    'BRCA1/2检测', '10基因Panel', '实体瘤大Panel文库'
+                ]
+            },
+            {
+                category: '常规病理',
+                children: [
+                    '组织切片', 'HE染色', '快速冰冻制片', '特殊染色与免疫组化',
+                    '常规石蜡切片制备', '常规染色制片', '常规组织病理诊断', '快速病理诊断', '细胞学制片'
+                ]
+            }
+        ];
+
+        // 默认任务选项及任务周期标准字典（名称 + 固有任务周期：每日/每周/每月）
+        let defaultTaskDict = [
+            { name: '核酸提取', period: '每日' },
+            { name: 'PCR扩增与上机', period: '每日' },
+            { name: '扩增曲线判读', period: '每日' },
+            { name: '荧光原位杂交实验与结果判读', period: '每日' },
+            { name: '测序实验与峰图判读', period: '每周' },
+            { name: '文库构建与上机测序', period: '每周' },
+            { name: '生信位点注释与突变复核', period: '每周' },
+            { name: '组织切片制备', period: '每日' },
+            { name: '常规染色', period: '每日' },
+            { name: '制片质量检查', period: '每日' },
+            { name: '病理图像阅片', period: '每日' },
+            { name: '诊断意见复核', period: '每日' },
+            { name: '报告签发', period: '每日' },
+            { name: '样本接收与信息核对', period: '每日' },
+            { name: '样本流转登记', period: '每日' },
+            { name: '外送样本管理', period: '每日' },
+            { name: '试剂耗材验收', period: '每月' },
+            { name: '库存与效期盘点', period: '每月' },
+            { name: '设备运行巡检', period: '每日' },
+            { name: '室内质量控制', period: '每周' },
+            { name: '生物安全检查', period: '每周' },
+            { name: '环境监测记录', period: '每日' },
+            { name: '质量记录审核', period: '每周' },
+            { name: '异常情况登记', period: '每日' },
+            { name: '整改跟踪', period: '每周' }
+        ];
+
+        function getTaskPeriod(taskName) {
+            if (!taskName) return '每日';
+            const m = String(taskName).match(/[\(\[]\s*(每日|每周|每月)\s*[\)\]]/);
+            if (m) return m[1];
+            const clean = getPureTaskName(taskName);
+            const found = defaultTaskDict.find(t => t.name === clean);
+            return found ? found.period : '每日';
+        }
+
+        function getPureTaskName(taskName) {
+            if (!taskName) return '';
+            return String(taskName).replace(/[\(\[]\s*(每日|每周|每月)\s*[\)\]]/g, '').trim();
+        }
+
+        // 兼容扁平映射
         const ruleItemCatalog = {
-            project: [
-                '肺11', '肠四联', 'BRAF', 'WT1-PCR',
-                '结核分枝杆菌核酸', '15种融合基因', 'TERT启动子突变',
-                'POLE突变', 'BCR/TCR重排', 'MSI微卫星不稳定', 'PDGFRA/KIT双基因',
-                'WT1-FISH', '骨髓融合基因', 'HER2扩增', 'ALK/ROS1断裂',
-                'BRCA1/2检测', '10基因Panel', '实体瘤大Panel文库',
-                '单基因变异检测', '多基因变异检测', '基因融合检测', '病原体核酸检测',
-                '基因重排检测', '荧光原位杂交检测', 'Sanger测序检测', '靶向高通量测序检测',
-                '组织切片制备', '常规染色制片', '常规组织病理诊断', '快速病理诊断'
-            ],
-            task: [
-                '核酸提取', 'PCR扩增与上机', '扩增曲线判读',
-                '荧光原位杂交实验与结果判读', '测序实验', '峰图判读',
-                '文库构建', '测序上机', '测序数据分析',
-                '检测结果复核', '检测报告初审',
-                '组织切片制备', '常规染色', '制片质量检查',
-                '病理图像阅片', '诊断意见复核', '报告签发',
-                '样本接收与信息核对', '样本流转登记', '外送样本管理',
-                '试剂耗材验收', '库存与效期盘点', '设备运行巡检',
-                '室内质量控制', '生物安全检查', '环境监测记录',
-                '质量记录审核', '异常情况登记', '整改跟踪'
-            ]
+            get project() {
+                const list = [];
+                ruleProjectTreeCatalog.forEach(c => list.push(...c.children));
+                return Array.from(new Set(list));
+            },
+            get task() {
+                return defaultTaskDict.map(t => t.name);
+            }
         };
 
         // 4. 严格按照用户表格初始化的 10 个标准岗位 (项目与任务拆分为两列)
@@ -12003,17 +12078,56 @@
             const container = document.getElementById('ruleProjectPickerOptions');
             if (!container) return;
             const kw = (keyword || '').trim().toLowerCase();
-            const list = ruleItemCatalog.project.filter(name => !kw || name.toLowerCase().includes(kw));
 
-            container.innerHTML = list.map(name => {
-                const isChecked = inlinePickerDraftProjects.includes(name);
-                return `
-                <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#303133; cursor:pointer; padding:4px 6px; border-radius:3px; margin-bottom:2px;">
-                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInlineProjectCheck('${escapeRuleHtml(name)}', this.checked)">
-                    <span>${escapeRuleHtml(name)}</span>
-                </label>`;
-            }).join('');
+            let html = '';
+            ruleProjectTreeCatalog.forEach((group, gIdx) => {
+                const matchedChildren = group.children.filter(c => !kw || c.toLowerCase().includes(kw) || group.category.toLowerCase().includes(kw));
+                if (matchedChildren.length === 0) return;
+
+                const allChecked = matchedChildren.every(c => inlinePickerDraftProjects.includes(c));
+                const someChecked = matchedChildren.some(c => inlinePickerDraftProjects.includes(c));
+
+                html += `
+                    <div style="margin-bottom: 8px; border: 1px solid #eef2f7; border-radius: 4px; overflow: hidden; background: #fff;">
+                        <div style="background: #f8fafc; padding: 6px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eef2f7;">
+                            <label style="display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 12.5px; color: #1D2129; cursor: pointer;">
+                                <input type="checkbox" ${allChecked ? 'checked' : ''} onchange="toggleCategoryProjectCheck(${gIdx}, this.checked)">
+                                <span>📁 ${escapeRuleHtml(group.category)}</span>
+                            </label>
+                            <span style="font-size: 11px; color: #909399;">共 ${matchedChildren.length} 项</span>
+                        </div>
+                        <div style="padding: 6px 10px; display: grid; grid-template-columns: 1fr; gap: 4px;">
+                            ${matchedChildren.map(name => {
+                                const isChecked = inlinePickerDraftProjects.includes(name);
+                                return `
+                                    <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #303133; cursor: pointer; padding: 3px 6px; border-radius: 3px; margin-left: 14px;" onmouseover="this.style.background='#f0f7ff'" onmouseout="this.style.background='transparent'">
+                                        <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInlineProjectCheck('${escapeRuleHtml(name)}', this.checked)">
+                                        <span>${escapeRuleHtml(name)}</span>
+                                    </label>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html || '<div style="padding:20px 0; text-align:center; color:#909399; font-size:12px;">无匹配的检测项目</div>';
             document.getElementById('ruleProjectPickerCount').innerText = `已选 ${inlinePickerDraftProjects.length} 项`;
+        }
+
+        function toggleCategoryProjectCheck(gIdx, checked) {
+            const group = ruleProjectTreeCatalog[gIdx];
+            if (!group) return;
+            group.children.forEach(name => {
+                if (checked) {
+                    if (!inlinePickerDraftProjects.includes(name)) inlinePickerDraftProjects.push(name);
+                } else {
+                    inlinePickerDraftProjects = inlinePickerDraftProjects.filter(n => n !== name);
+                }
+            });
+            document.getElementById('ruleProjectPickerCount').innerText = `已选 ${inlinePickerDraftProjects.length} 项`;
+            renderRuleProjectPicker(document.getElementById('ruleProjectPickerSearch').value);
+            renderRuleProjectPickerSelected();
         }
 
         function toggleInlineProjectCheck(name, checked) {
@@ -12023,6 +12137,7 @@
                 inlinePickerDraftProjects = inlinePickerDraftProjects.filter(n => n !== name);
             }
             document.getElementById('ruleProjectPickerCount').innerText = `已选 ${inlinePickerDraftProjects.length} 项`;
+            renderRuleProjectPicker(document.getElementById('ruleProjectPickerSearch').value);
             renderRuleProjectPickerSelected();
         }
 
@@ -12053,8 +12168,6 @@
             renderRuleProjectPickerSelected();
         }
 
-        // addCustomRuleProject 已根据规范彻底移除
-
         function confirmRuleProjectPicker() {
             if (ruleEditingRowId) {
                 const row = ruleRows.find(r => r.id === ruleEditingRowId);
@@ -12078,6 +12191,8 @@
 
             document.getElementById('ruleTaskPickerModal').style.display = 'flex';
             document.getElementById('ruleTaskPickerSearch').value = '';
+            const customInput = document.getElementById('customTaskInput');
+            if (customInput) customInput.value = '';
             renderRuleTaskPicker('');
             renderRuleTaskPickerSelected();
         }
@@ -12091,24 +12206,32 @@
             const container = document.getElementById('ruleTaskPickerOptions');
             if (!container) return;
             const kw = (keyword || '').trim().toLowerCase();
-            const list = ruleItemCatalog.task.filter(name => !kw || name.toLowerCase().includes(kw));
+            const list = defaultTaskDict.filter(item => !kw || item.name.toLowerCase().includes(kw) || item.period.includes(kw));
 
-            container.innerHTML = list.map(name => {
-                const isChecked = inlinePickerDraftTasks.includes(name);
+            container.innerHTML = list.map(item => {
+                const cleanName = item.name;
+                const isChecked = inlinePickerDraftTasks.some(t => getPureTaskName(t) === cleanName);
                 return `
-                <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#303133; cursor:pointer; padding:4px 6px; border-radius:3px; margin-bottom:2px;">
-                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInlineTaskCheck('${escapeRuleHtml(name)}', this.checked)">
-                    <span>${escapeRuleHtml(name)}</span>
-                </label>`;
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 8px; border-bottom: 1px solid #f5f7fa;" onmouseover="this.style.background='#f0f7ff'" onmouseout="this.style.background='transparent'">
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #303133; cursor: pointer; flex: 1; min-width: 0;">
+                        <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="toggleInlineTaskCheck('${escapeRuleHtml(cleanName)}', '${item.period}', this.checked)">
+                        <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeRuleHtml(cleanName)}</span>
+                    </label>
+                    <span style="font-size: 11.5px; color: #606266; width: 70px; text-align: center; background: #f4f4f5; border-radius: 2px; padding: 1px 4px; border: 1px solid #e4e7ed;">${item.period}</span>
+                </div>`;
             }).join('');
             document.getElementById('ruleTaskPickerCount').innerText = `已选 ${inlinePickerDraftTasks.length} 项`;
         }
 
-        function toggleInlineTaskCheck(name, checked) {
+        function toggleInlineTaskCheck(name, period, checked) {
+            const cleanName = getPureTaskName(name);
+            const taskKey = `${cleanName} [${period}]`;
             if (checked) {
-                if (!inlinePickerDraftTasks.includes(name)) inlinePickerDraftTasks.push(name);
+                if (!inlinePickerDraftTasks.some(t => getPureTaskName(t) === cleanName)) {
+                    inlinePickerDraftTasks.push(taskKey);
+                }
             } else {
-                inlinePickerDraftTasks = inlinePickerDraftTasks.filter(n => n !== name);
+                inlinePickerDraftTasks = inlinePickerDraftTasks.filter(t => getPureTaskName(t) !== cleanName);
             }
             document.getElementById('ruleTaskPickerCount').innerText = `已选 ${inlinePickerDraftTasks.length} 项`;
             renderRuleTaskPickerSelected();
@@ -12121,12 +12244,18 @@
                 box.innerHTML = `<div style="padding:20px 0; text-align:center; color:#909399; font-size:12px;">暂无已选任务</div>`;
                 return;
             }
-            box.innerHTML = inlinePickerDraftTasks.map((name, idx) => `
-                <div style="display:flex; align-items:center; justify-content:space-between; padding:4px 8px; margin-bottom:4px; background:#f0f9eb; border:1px solid #c2e7b0; border-radius:3px; font-size:12px;">
-                    <span style="color:#67c23a; font-weight:600;">${escapeRuleHtml(name)}</span>
-                    <span onclick="removeInlineTaskDraft(${idx})" style="color:#f56c6c; cursor:pointer; font-size:14px; font-weight:700;">×</span>
-                </div>
-            `).join('');
+            box.innerHTML = inlinePickerDraftTasks.map((taskStr, idx) => {
+                const cleanName = getPureTaskName(taskStr);
+                const period = getTaskPeriod(taskStr);
+                return `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; margin-bottom: 4px; background: #f0f9eb; border: 1px solid #c2e7b0; border-radius: 3px; font-size: 12px;">
+                    <div style="display: flex; align-items: center; gap: 6px; overflow: hidden; min-width: 0;">
+                        <span style="color: #27491d; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeRuleHtml(cleanName)}</span>
+                        <span style="font-size: 11px; background: #e1f3d8; color: #67c23a; padding: 0 4px; border-radius: 2px;">${period}</span>
+                    </div>
+                    <span onclick="removeInlineTaskDraft(${idx})" style="color: #f56c6c; cursor: pointer; font-size: 14px; font-weight: 700; margin-left: 6px;">×</span>
+                </div>`;
+            }).join('');
         }
 
         function removeInlineTaskDraft(idx) {
@@ -12141,16 +12270,30 @@
             renderRuleTaskPickerSelected();
         }
 
-        function addCustomRuleTask() {
-            const input = document.getElementById('ruleCustomTaskInput');
-            const val = input.value.trim();
-            if (!val) return;
-            if (!inlinePickerDraftTasks.includes(val)) {
-                inlinePickerDraftTasks.push(val);
+        function addCustomTaskItem() {
+            const input = document.getElementById('customTaskInput');
+            const periodSelect = document.getElementById('customTaskPeriod');
+            const val = (input ? input.value : '').trim();
+            const period = periodSelect ? periodSelect.value : '每日';
+            if (!val) {
+                showToast('请输入自定义任务名称');
+                return;
+            }
+            const cleanName = getPureTaskName(val);
+            const existing = defaultTaskDict.find(t => t.name === cleanName);
+            if (!existing) {
+                defaultTaskDict.push({ name: cleanName, period: period });
+            } else {
+                existing.period = period;
+            }
+            const taskKey = `${cleanName} [${period}]`;
+            if (!inlinePickerDraftTasks.some(t => getPureTaskName(t) === cleanName)) {
+                inlinePickerDraftTasks.push(taskKey);
             }
             input.value = '';
+            renderRuleTaskPicker(document.getElementById('ruleTaskPickerSearch').value);
             renderRuleTaskPickerSelected();
-            document.getElementById('ruleTaskPickerCount').innerText = `已选 ${inlinePickerDraftTasks.length} 项`;
+            showToast(`已添加任务：${cleanName} [${period}]`);
         }
 
         function confirmRuleTaskPicker() {
@@ -12580,8 +12723,16 @@
         const tabTodo = document.getElementById('tab-sub-todo');
 
         if (viewType === 'schedule') {
-            if (viewBoard) viewBoard.style.display = 'flex';
-            if (viewTodo) viewTodo.style.display = 'none';
+            if (viewBoard) {
+                viewBoard.classList.remove('view-hidden');
+                viewBoard.classList.add('view-active');
+                viewBoard.style.setProperty('display', 'flex', 'important');
+            }
+            if (viewTodo) {
+                viewTodo.classList.remove('view-active');
+                viewTodo.classList.add('view-hidden');
+                viewTodo.style.setProperty('display', 'none', 'important');
+            }
             if (menuSchedule) {
                 menuSchedule.classList.add('active');
                 menuSchedule.style.color = '#008fd5';
@@ -12597,8 +12748,16 @@
             if (tabSchedule) tabSchedule.classList.add('active');
             if (tabTodo) tabTodo.classList.remove('active');
         } else {
-            if (viewBoard) viewBoard.style.display = 'none';
-            if (viewTodo) viewTodo.style.display = 'flex';
+            if (viewBoard) {
+                viewBoard.classList.remove('view-active');
+                viewBoard.classList.add('view-hidden');
+                viewBoard.style.setProperty('display', 'none', 'important');
+            }
+            if (viewTodo) {
+                viewTodo.classList.remove('view-hidden');
+                viewTodo.classList.add('view-active');
+                viewTodo.style.setProperty('display', 'flex', 'important');
+            }
             if (menuTodo) {
                 menuTodo.classList.add('active');
                 menuTodo.style.color = '#008fd5';
@@ -13043,23 +13202,19 @@
         }
     }
 
-    function deleteSelectedLaunchDutyRows() {
+    function removeSelectedLaunchDutyRows() {
         const checkedCbs = document.querySelectorAll('.launch-row-checkbox:checked');
         if (!checkedCbs || checkedCbs.length === 0) {
-            showToast('请先勾选需要删除的任务明细！');
+            showToast('请先勾选需要移除的记录！');
             return;
         }
-        const selectedPostIds = new Set();
-        checkedCbs.forEach(cb => selectedPostIds.add(cb.value));
-        currentLaunchDutyRows = currentLaunchDutyRows.filter(r => !selectedPostIds.has(r.postId));
+        const selectedKeys = new Set();
+        checkedCbs.forEach(cb => selectedKeys.add(cb.value));
+        currentLaunchDutyRows = currentLaunchDutyRows.filter(r => !selectedKeys.has(r.uniqueKey));
         renderLaunchPostVerifyTable(true);
-        showToast(`已删除 ${selectedPostIds.size} 项任务明细`);
+        showToast(`已移除 ${selectedKeys.size} 条记录`);
     }
-
-    function deleteLaunchDutyRow(postId) {
-        currentLaunchDutyRows = currentLaunchDutyRows.filter(r => r.postId !== postId);
-        renderLaunchPostVerifyTable(true);
-    }
+    const deleteSelectedLaunchDutyRows = removeSelectedLaunchDutyRows;
 
     function renderLaunchPostVerifyTable(keepCurrentData = false) {
         const tbody = document.getElementById('launchPostVerifyTbody');
@@ -13088,6 +13243,7 @@
             }
 
             currentLaunchDutyRows = [];
+            let rowIdx = 0;
 
             POST_REGISTRY.forEach(post => {
                 const dutyPersonSet = new Set();
@@ -13101,30 +13257,43 @@
                     dayPersons.forEach(p => dutyPersonSet.add(p));
                 });
 
-                // 规则：未排班的岗位，不显示在任务明细
+                // 未排班的岗位，不显示在任务明细
                 if (dutyPersonSet.size === 0) {
                     return;
                 }
 
-                // 同一岗位多个责任人合并展示（顿号隔开）
                 const personsArray = Array.from(dutyPersonSet);
                 const dutyPersonsDisplay = personsArray.join('、');
 
-                // 任务明细（多个任务用分号；隔开）
-                let taskText = POST_DUTY_TASK_MAP[post.id] || (post.items && post.items.length > 0 ? post.items.join('；') : post.title);
+                // 提取岗位关联的任务列表，严格按照单任务单行解耦展示
+                let rawTasks = [];
+                const ruleRow = ruleRows.find(r => r.name === post.title || r.id === post.id);
+                if (ruleRow && ruleRow.tasks && ruleRow.tasks.length > 0) {
+                    rawTasks = ruleRow.tasks;
+                } else if (POST_DUTY_TASK_MAP[post.id]) {
+                    rawTasks = POST_DUTY_TASK_MAP[post.id].split(/[；;]/).map(t => t.trim()).filter(Boolean);
+                } else if (post.items && post.items.length > 0) {
+                    rawTasks = post.items;
+                } else {
+                    rawTasks = [post.title + '常规实验操作'];
+                }
 
-                // 默认提醒周期：巡检岗位默认每日，常规排班默认每周
-                let defaultPeriod = (post.groupId === 'quality-safety' || post.title.includes('巡检')) ? '每日' : '每周';
+                rawTasks.forEach(taskItem => {
+                    const cleanTask = getPureTaskName(taskItem);
+                    const taskPeriod = getTaskPeriod(taskItem);
+                    const uniqueKey = `launch_row_${post.id}_${++rowIdx}`;
 
-                currentLaunchDutyRows.push({
-                    postId: post.id,
-                    postTitle: post.title,
-                    groupName: post.group_name || '检测组',
-                    tasks: taskText,
-                    persons: personsArray,
-                    personsDisplay: dutyPersonsDisplay,
-                    dailyDutyMap: dailyDutyMap,
-                    reminderPeriod: defaultPeriod
+                    currentLaunchDutyRows.push({
+                        uniqueKey: uniqueKey,
+                        postId: post.id,
+                        postTitle: post.title,
+                        groupName: post.group_name || '分子检测组',
+                        taskName: cleanTask,
+                        taskPeriod: taskPeriod,
+                        persons: personsArray,
+                        personsDisplay: dutyPersonsDisplay,
+                        dailyDutyMap: dailyDutyMap
+                    });
                 });
             });
         }
@@ -13141,20 +13310,16 @@
             html += `
                 <tr style="border-bottom: 1px solid #ebeef5; height: 36px; white-space: nowrap;">
                     <td style="padding: 0 4px; text-align: center; white-space: nowrap;">
-                        <input type="checkbox" class="launch-row-checkbox" value="${row.postId}" onchange="onLaunchRowCheckChange()" style="cursor: pointer; vertical-align: middle;">
+                        <input type="checkbox" class="launch-row-checkbox" value="${row.uniqueKey}" onchange="onLaunchRowCheckChange()" style="cursor: pointer; vertical-align: middle;">
                     </td>
                     <td style="padding: 0 4px; text-align: center; color: #909399; white-space: nowrap;">${idx + 1}</td>
                     <td style="padding: 0 10px; text-align: left; font-weight: 600; color: #1D2129; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${row.postTitle}">${row.postTitle}</td>
                     <td style="padding: 0 8px; text-align: left; color: #606266; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${row.groupName}">${row.groupName}</td>
-                    <td style="padding: 0 8px; text-align: left; color: #606266; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${row.tasks}">${row.tasks}</td>
-                    <td style="padding: 0 8px; text-align: left; color: #303133; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${row.personsDisplay}">${row.personsDisplay}</td>
+                    <td style="padding: 0 8px; text-align: left; color: #1D2129; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${row.taskName}">${row.taskName}</td>
                     <td style="padding: 0 8px; text-align: center; white-space: nowrap;">
-                        <select onchange="onLaunchRowPeriodChange('${row.postId}', this.value)" style="height: 24px; font-size: 12px; border: 1px solid #dcdfe6; border-radius: 3px; padding: 0 4px; color: #303133; background: #ffffff; cursor: pointer; outline: none;">
-                            <option value="每日" ${row.reminderPeriod === '每日' ? 'selected' : ''}>每日</option>
-                            <option value="每周" ${row.reminderPeriod === '每周' ? 'selected' : ''}>每周</option>
-                            <option value="每月" ${row.reminderPeriod === '每月' ? 'selected' : ''}>每月</option>
-                        </select>
+                        <span style="display: inline-block; padding: 2px 8px; font-size: 11.5px; border-radius: 3px; background: #f4f4f5; color: #606266; border: 1px solid #e4e7ed;">${row.taskPeriod}</span>
                     </td>
+                    <td style="padding: 0 8px; text-align: left; color: #303133; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${row.personsDisplay}">${row.personsDisplay}</td>
                 </tr>
             `;
         });
@@ -13162,13 +13327,6 @@
         tbody.innerHTML = html;
         const checkAll = document.getElementById('launchCheckAll');
         if (checkAll) checkAll.checked = false;
-    }
-
-    function onLaunchRowPeriodChange(postId, newPeriod) {
-        const row = currentLaunchDutyRows.find(r => r.postId === postId);
-        if (row) {
-            row.reminderPeriod = newPeriod;
-        }
     }
 
     function confirmExecuteLaunchTodo() {
@@ -13193,14 +13351,14 @@
             cur.setDate(cur.getDate() + 1);
         }
 
-        // 重新构建【待办任务】列表，根据提醒周期控制生成条数，且责任人关联多个人
+        // 重新构建【待办任务】列表，根据任务周期控制生成条数，且单任务独立生成
         const newTodoList = [];
         let todoIdx = 1;
 
         currentLaunchDutyRows.forEach(row => {
-            const period = row.reminderPeriod;
+            const period = row.taskPeriod;
             if (period === '每日') {
-                // 每日提醒周期：时间段内的每一天生成一条待办记录，责任人关联当天/综合当值人员
+                // 每日任务：时间段内每天独立生成 1 条待办记录，责任人关联当天在岗人员
                 dates.forEach(dStr => {
                     const dayPersons = (row.dailyDutyMap && row.dailyDutyMap[dStr] && row.dailyDutyMap[dStr].length > 0)
                         ? row.dailyDutyMap[dStr].join('、')
@@ -13210,7 +13368,7 @@
                         id: `TD-${String(todoIdx++).padStart(2, '0')}`,
                         post: row.postTitle,
                         group: row.groupName,
-                        task: row.tasks,
+                        task: row.taskName,
                         person: dayPersons,
                         startDate: dStr,
                         endDate: dStr,
@@ -13219,12 +13377,12 @@
                     });
                 });
             } else if (period === '每月') {
-                // 每月提醒周期：整月/周期合并生成 1 条待办任务
+                // 每月任务：整月/周期合并生成 1 条周度/月度任务
                 newTodoList.push({
                     id: `TD-${String(todoIdx++).padStart(2, '0')}`,
                     post: row.postTitle,
                     group: row.groupName,
-                    task: row.tasks,
+                    task: row.taskName,
                     person: row.personsDisplay,
                     startDate: s,
                     endDate: e,
@@ -13232,12 +13390,12 @@
                     remarks: `【每月待办】月度岗位综合履职`
                 });
             } else {
-                // 默认每周：整周生成 1 条待办任务
+                // 每周任务：在起止时间内合并生成 1 条周度任务
                 newTodoList.push({
                     id: `TD-${String(todoIdx++).padStart(2, '0')}`,
                     post: row.postTitle,
                     group: row.groupName,
-                    task: row.tasks,
+                    task: row.taskName,
                     person: row.personsDisplay,
                     startDate: s,
                     endDate: e,
@@ -13410,6 +13568,7 @@
     // 页面加载完成后启动标签栏与待办引擎初始化
     window.addEventListener('load', function() {
         initWorkspaceScheduleTabs();
+        switchScheduleSubView(currentScheduleSubView || 'schedule');
         renderTodoTable();
     });
     
